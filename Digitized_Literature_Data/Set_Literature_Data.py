@@ -7,9 +7,13 @@ def set_literature_data():
     NBDL_data_path = r"C:\Users\kryst\Desktop\THESIS\Data_Analysis\15G NBDL Data\Processed Data\Compiled Test Data"
     average_data, low_data, high_data = NBDL.callNBDL(NBDL_data_path)
 
-    # Panzer literature data needed for comparison
+    # Panzer kinematics literature data needed for comparison
     panzer_data_path = r"C:\Users\kryst\Desktop\THESIS\Data_Analysis\Digitized_Literature_Data\Panzer_Accel_Results_Comparison"
-    panzer_data = panzer_lit.callPanzerLit(panzer_data_path)
+    panzer_kinematic_data = panzer_lit.call_panzer_kinematics(panzer_data_path)
+
+    # Panzer kinematics literature data needed for comparison
+    panzer_vertebral_data_path = r"C:\Users\kryst\Desktop\THESIS\Data_Analysis\Digitized_Literature_Data\Spine_Segment_Flexion_Panzer_2006"
+    panzer_vertebral_data = panzer_lit.call_panzer_vertebrae(panzer_vertebral_data_path)
 
     # Thunnissen literature data needed for comparison
     thunn_data_path = r"C:\Users\kryst\Desktop\THESIS\Data_Analysis\Digitized_Literature_Data\Literature_Summary"
@@ -18,7 +22,8 @@ def set_literature_data():
     exp_kinematic_data = {'NBDL_average': average_data,
                          'NBDL_STDEV-1': low_data,
                          'NBDL_STDEV+1': high_data,
-                         'panzer_data': panzer_data,
+                         'panzer_kinematic_data': panzer_kinematic_data,
+                         'panzer_vertebral_data': panzer_vertebral_data,
                          'thunn_data': thunn_data
     }
     return exp_kinematic_data

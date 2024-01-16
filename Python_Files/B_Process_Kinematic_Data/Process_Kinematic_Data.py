@@ -133,4 +133,4 @@ def process_kinematic_data(simulation, kin_file_path, average_data, low_data, hi
 
     plot_kinematic_data(data, average_data, low_data, high_data, panzer_data, thunn_data)
 
-    return
+    return data
