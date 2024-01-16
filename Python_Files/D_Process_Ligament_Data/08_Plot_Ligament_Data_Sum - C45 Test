@@ -1,0 +1,323 @@
+import os, glob
+import re
+import numpy as np
+import pandas as pd
+data_path = "C:\\Users\\kamezcua\\Desktop\\0000 THESIS\\Model Development\\0 15 G Sled Test Validation\\0924\\Disp BC\\Baseline\\Ligament Forces\\Ligament Test\\"
+os.chdir(data_path)
+print('running')
+
+path = data_path + "Ligament Data.csv"
+summary_df = pd.read_csv(path, sep=',', engine = 'python', index_col=False)
+
+summary_df['C01_Fy'] = (summary_df['C01_AAOM_Fy']+summary_df['C01_JC_Fy']+ summary_df['C01_PAOM_Fy'])*-1
+summary_df['C02_Fy'] = (summary_df['C02_ALAR_Fy']+summary_df['C02_APICAL_Fy']+summary_df['C02_TM_Fy']+summary_df['C02_TM_VC_Fy'])*-1
+summary_df['C12_Fy'] = (summary_df['C12_AAAM_Fy']+summary_df['C12_ISL_Fy']+summary_df['C12_JC_Fy']+summary_df['C12_PAAM_Fy']+summary_df['C12_TL_Fy'])*-1
+summary_df['C23_Fy'] = (summary_df['C23_ALL_Fy']+summary_df['C23_ISL_Fy']+summary_df['C23_JC_Fy']+summary_df['C23_LF_Fy']+summary_df['C23_PLL_Fy'])*-1
+summary_df['C34_Fy'] = (summary_df['C34_ALL_Fy']+summary_df['C34_ISL_Fy']+summary_df['C34_JC_Fy']+summary_df['C34_LF_Fy']+summary_df['C34_PLL_Fy'])*-1
+summary_df['C45_Fy'] = (summary_df['C45_ALL_Fy']+summary_df['C45_ISL_Fy']+summary_df['C45_JC_Fy']+summary_df['C45_LF_Fy']+summary_df['C45_PLL_Fy'])*-1
+summary_df['C56_Fy'] = (summary_df['C56_ALL_Fy']+summary_df['C56_ISL_Fy']+summary_df['C56_JC_Fy']+summary_df['C56_LF_Fy']+summary_df['C56_PLL_Fy'])*-1
+summary_df['C67_Fy'] = (summary_df['C67_ALL_Fy']+summary_df['C67_ISL_Fy']+summary_df['C67_JC_Fy']+summary_df['C67_LF_Fy']+summary_df['C67_PLL_Fy'])*-1
+summary_df['C7T1_Fy'] = (summary_df['C7T1_ALL_Fy']+summary_df['C7T1_ISL_Fy']+summary_df['C7T1_JC_Fy']+summary_df['C7T1_LF_Fy']+summary_df['C7T1_PLL_Fy'])*-1
+
+summary_df['C01_Fz'] = summary_df['C01_AAOM_Fz']+summary_df['C01_JC_Fz']+ summary_df['C01_PAOM_Fz']
+summary_df['C02_Fz'] = summary_df['C02_ALAR_Fz']+summary_df['C02_APICAL_Fz']+summary_df['C02_TM_Fz']+summary_df['C02_TM_VC_Fz']
+summary_df['C12_Fz'] = summary_df['C12_AAAM_Fz']+summary_df['C12_ISL_Fz']+summary_df['C12_JC_Fz']+summary_df['C12_PAAM_Fz']+summary_df['C12_TL_Fz']
+summary_df['C23_Fz'] = summary_df['C23_ALL_Fz']+summary_df['C23_ISL_Fz']+summary_df['C23_JC_Fz']+summary_df['C23_LF_Fz']+summary_df['C23_PLL_Fz']
+summary_df['C34_Fz'] = summary_df['C34_ALL_Fz']+summary_df['C34_ISL_Fz']+summary_df['C34_JC_Fz']+summary_df['C34_LF_Fz']+summary_df['C34_PLL_Fz']
+summary_df['C45_Fz'] = summary_df['C45_ALL_Fz']+summary_df['C45_ISL_Fz']+summary_df['C45_JC_Fz']+summary_df['C45_LF_Fz']+summary_df['C45_PLL_Fz']
+summary_df['C56_Fz'] = summary_df['C56_ALL_Fz']+summary_df['C56_ISL_Fz']+summary_df['C56_JC_Fz']+summary_df['C56_LF_Fz']+summary_df['C56_PLL_Fz']
+summary_df['C67_Fz'] = summary_df['C67_ALL_Fz']+summary_df['C67_ISL_Fz']+summary_df['C67_JC_Fz']+summary_df['C67_LF_Fz']+summary_df['C67_PLL_Fz']
+summary_df['C7T1_Fz'] = summary_df['C7T1_ALL_Fz']+summary_df['C7T1_ISL_Fz']+summary_df['C7T1_JC_Fz']+summary_df['C7T1_LF_Fz']+summary_df['C7T1_PLL_Fz']
+
+summary_df['C01_Fr'] = ((summary_df['C01_Fy']**2)+(summary_df['C01_Fz'])**2)**0.5
+summary_df['C12_Fr'] = ((summary_df['C12_Fy']**2)+(summary_df['C12_Fz'])**2)**0.5
+summary_df['C02_Fr'] = ((summary_df['C02_Fy']**2)+(summary_df['C02_Fz'])**2)**0.5
+summary_df['C23_Fr'] = ((summary_df['C23_Fy']**2)+(summary_df['C23_Fz'])**2)**0.5
+summary_df['C34_Fr'] = ((summary_df['C34_Fy']**2)+(summary_df['C34_Fz'])**2)**0.5
+summary_df['C45_Fr'] = ((summary_df['C45_Fy']**2)+(summary_df['C45_Fz'])**2)**0.5
+summary_df['C56_Fr'] = ((summary_df['C56_Fy']**2)+(summary_df['C56_Fz'])**2)**0.5
+summary_df['C67_Fr'] = ((summary_df['C67_Fy']**2)+(summary_df['C67_Fz'])**2)**0.5
+summary_df['C7T1_Fr'] = ((summary_df['C7T1_Fy']**2)+(summary_df['C7T1_Fz'])**2)**0.5
+
+###########################################################################################################
+
+#Quick Plot
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+
+channelsimt = 'Sim_Time_s'
+
+###########################################################################################################
+
+figure, ax = plt.subplots(3, 3,figsize=(50,30)) #columns then rows size
+plt.rcParams['font.size'] = '20'
+# fig = plt.figure(figsize=(16,16))
+
+###### C01
+ax[0,0].plot(summary_df[channelsimt],summary_df['C01_Fr'], label ='C01_Fr', color = 'red')
+ax[0,0].plot(summary_df[channelsimt],summary_df['C01_Fy'], label ='C01_Fy', color = 'orange')
+ax[0,0].plot(summary_df[channelsimt],summary_df['C01_Fz'], label ='C01_Fz', color = 'green')
+ax[0, 0].set_title('C01')
+ax[0, 0].set_xlim(0, 0.25)
+# ax[0, 0].set_ylim(-600, 600)
+ax[0, 0].set_xlabel('Time (s)')
+ax[0, 0].set_ylabel('Force (N)')
+ax[0, 0].grid(True)
+ax[0, 0].legend()
+ax[0,1].plot(summary_df[channelsimt],summary_df['C12_Fr'], label ='C12_Fr', color = 'red')
+ax[0,1].plot(summary_df[channelsimt],summary_df['C12_Fy'], label ='C12_Fy', color = 'orange')
+ax[0,1].plot(summary_df[channelsimt],summary_df['C12_Fz'], label ='C12_Fz', color = 'green')
+ax[0, 1].set_title('C12')
+ax[0, 1].set_xlim(0, 0.25)
+# ax[0, 1].set_ylim(-600, 600)
+ax[0, 1].set_xlabel('Time (s)')
+ax[0, 1].set_ylabel('Force (N)')
+ax[0, 1].grid(True)
+ax[0, 1].legend()
+ax[0,2].plot(summary_df[channelsimt],summary_df['C02_Fr'], label ='C02_Fr', color = 'red')
+ax[0,2].plot(summary_df[channelsimt],summary_df['C02_Fy'], label ='C02_Fy', color = 'orange')
+ax[0,2].plot(summary_df[channelsimt],summary_df['C02_Fz'], label ='C02_Fz', color = 'green')
+ax[0, 2].set_title('C02')
+ax[0, 2].set_xlim(0, 0.25)
+# ax[0, 2].set_ylim(-600, 600)
+ax[0, 2].set_xlabel('Time (s)')
+ax[0, 2].set_ylabel('Force (N)')
+ax[0, 2].grid(True)
+ax[0, 2].legend()
+
+ax[1,0].plot(summary_df[channelsimt],summary_df['C23_Fr'], label ='C23_Fr', color = 'red')
+ax[1,0].plot(summary_df[channelsimt],summary_df['C23_Fy'], label ='C23_Fy', color = 'orange')
+ax[1,0].plot(summary_df[channelsimt],summary_df['C23_Fz'], label ='C23_Fz', color = 'green')
+ax[1, 0].set_title('C23')
+ax[1, 0].set_xlim(0, 0.25)
+# ax[1, 0].set_ylim(-600, 600)
+ax[1, 0].set_xlabel('Time (s)')
+ax[1, 0].set_ylabel('Force (N)')
+ax[1, 0].grid(True)
+ax[1, 0].legend()
+ax[1,1].plot(summary_df[channelsimt],summary_df['C34_Fr'], label ='C34_Fr', color = 'red')
+ax[1,1].plot(summary_df[channelsimt],summary_df['C34_Fy'], label ='C34_Fy', color = 'orange')
+ax[1,1].plot(summary_df[channelsimt],summary_df['C34_Fz'], label ='C34_Fz', color = 'green')
+ax[1, 1].set_title('C34')
+ax[1, 1].set_xlim(0, 0.25)
+# ax[1, 1].set_ylim(-600, 600)
+ax[1, 1].set_xlabel('Time (s)')
+ax[1, 1].set_ylabel('Force (N)')
+ax[1, 1].grid(True)
+ax[1, 1].legend()
+ax[1,2].plot(summary_df[channelsimt],summary_df['C45_Fr'], label ='C45_Fr', color = 'red')
+ax[1,2].plot(summary_df[channelsimt],summary_df['C45_Fy'], label ='C45_Fy', color = 'orange')
+ax[1,2].plot(summary_df[channelsimt],summary_df['C45_Fz'], label ='C45_Fz', color = 'green')
+ax[1, 2].set_title('C45')
+ax[1, 2].set_xlim(0, 0.25)
+# ax[1, 2].set_ylim(-600, 600)
+ax[1, 2].set_xlabel('Time (s)')
+ax[1, 2].set_ylabel('Force (N)')
+ax[1, 2].grid(True)
+ax[1, 2].legend()
+#
+
+ax[2,0].plot(summary_df[channelsimt],summary_df['C56_Fr'], label ='C56_Fr', color = 'red')
+ax[2,0].plot(summary_df[channelsimt],summary_df['C56_Fy'], label ='C56_Fy', color = 'orange')
+ax[2,0].plot(summary_df[channelsimt],summary_df['C56_Fz'], label ='C56_Fz', color = 'green')
+ax[2, 0].set_title('C56')
+ax[2, 0].set_xlim(0, 0.25)
+# ax[2, 0].set_ylim(-600, 600)
+ax[2, 0].set_xlabel('Time (s)')
+ax[2, 0].set_ylabel('Force (N)')
+ax[2, 0].grid(True)
+ax[2, 0].legend()
+ax[2,1].plot(summary_df[channelsimt],summary_df['C67_Fr'], label ='C67_Fr', color = 'red')
+ax[2,1].plot(summary_df[channelsimt],summary_df['C67_Fy'], label ='C67_Fy', color = 'orange')
+ax[2,1].plot(summary_df[channelsimt],summary_df['C67_Fz'], label ='C67_Fz', color = 'green')
+ax[2, 1].set_title('C67')
+ax[2, 1].set_xlim(0, 0.25)
+# ax[2, 1].set_ylim(-600, 600)
+ax[2, 1].set_xlabel('Time (s)')
+ax[2, 1].set_ylabel('Force (N)')
+ax[2, 1].grid(True)
+ax[2, 1].legend()
+ax[2,2].plot(summary_df[channelsimt],summary_df['C7T1_Fr'], label ='C7T1_Fr', color = 'red')
+ax[2,2].plot(summary_df[channelsimt],summary_df['C7T1_Fy'], label ='C7T1_Fy', color = 'orange')
+ax[2,2].plot(summary_df[channelsimt],summary_df['C7T1_Fz'], label ='C7T1_Fz', color = 'green')
+ax[2, 2].set_title('C7T1')
+ax[2, 2].set_xlim(0, 0.25)
+# ax[2, 2].set_ylim(-600, 600)
+ax[2, 2].set_xlabel('Time (s)')
+ax[2, 2].set_ylabel('Force (N)')
+ax[2, 2].grid(True)
+ax[2, 2].legend()
+
+for item in ([ax[0,0].title, ax[0,0].xaxis.label, ax[0,0].yaxis.label] +
+             ax[0,0].get_xticklabels() + ax[0,0].get_yticklabels()):
+    item.set_fontsize(20)
+for item in ([ax[0,1].title, ax[0,1].xaxis.label, ax[0,1].yaxis.label] +
+             ax[0,1].get_xticklabels() + ax[0,1].get_yticklabels()):
+    item.set_fontsize(20)
+for item in ([ax[0,2].title, ax[0,2].xaxis.label, ax[0,2].yaxis.label] +
+             ax[0,2].get_xticklabels() + ax[0,2].get_yticklabels()):
+    item.set_fontsize(20)
+for item in ([ax[1,0].title, ax[1,0].xaxis.label, ax[1,0].yaxis.label] +
+             ax[1,0].get_xticklabels() + ax[1,0].get_yticklabels()):
+    item.set_fontsize(20)
+for item in ([ax[1,1].title, ax[1,1].xaxis.label, ax[1,1].yaxis.label] +
+             ax[1,1].get_xticklabels() + ax[1,1].get_yticklabels()):
+    item.set_fontsize(20)
+for item in ([ax[1,2].title, ax[1,2].xaxis.label, ax[1,2].yaxis.label] +
+             ax[1,2].get_xticklabels() + ax[1,2].get_yticklabels()):
+    item.set_fontsize(20)
+#
+for item in ([ax[2,0].title, ax[2,0].xaxis.label, ax[2,0].yaxis.label] +
+             ax[2,0].get_xticklabels() + ax[2,0].get_yticklabels()):
+    item.set_fontsize(20)
+for item in ([ax[2,1].title, ax[2,1].xaxis.label, ax[2,1].yaxis.label] +
+             ax[2,1].get_xticklabels() + ax[2,1].get_yticklabels()):
+    item.set_fontsize(20)
+for item in ([ax[2,2].title, ax[2,2].xaxis.label, ax[2,2].yaxis.label] +
+             ax[2,2].get_xticklabels() + ax[2,2].get_yticklabels()):
+    item.set_fontsize(20)
+
+plt.tight_layout()
+
+# plt.subplots_adjust(left = 0.17, bottom = 0.13)
+plt.savefig('Ligament Summary by Level - No Limit.png')
+plt.show()
+
+###########################################################################################################
+###########################################################################################################
+figure, ax = plt.subplots(3, 3,figsize=(50,30)) #columns then rows size
+plt.rcParams['font.size'] = '20'
+# fig = plt.figure(figsize=(16,16))
+
+###### C01
+ax[0,0].plot(summary_df[channelsimt],summary_df['C01_Fr'], label ='C01_Fr', color = 'red')
+ax[0,0].plot(summary_df[channelsimt],summary_df['C01_Fy'], label ='C01_Fy', color = 'orange')
+ax[0,0].plot(summary_df[channelsimt],summary_df['C01_Fz'], label ='C01_Fz', color = 'green')
+ax[0, 0].set_title('C01')
+ax[0, 0].set_xlim(0, 0.25)
+ax[0, 0].set_ylim(-600, 600)
+ax[0, 0].set_xlabel('Time (s)')
+ax[0, 0].set_ylabel('Force (N)')
+ax[0, 0].grid(True)
+ax[0, 0].legend()
+ax[0,1].plot(summary_df[channelsimt],summary_df['C12_Fr'], label ='C12_Fr', color = 'red')
+ax[0,1].plot(summary_df[channelsimt],summary_df['C12_Fy'], label ='C12_Fy', color = 'orange')
+ax[0,1].plot(summary_df[channelsimt],summary_df['C12_Fz'], label ='C12_Fz', color = 'green')
+ax[0, 1].set_title('C12')
+ax[0, 1].set_xlim(0, 0.25)
+ax[0, 1].set_ylim(-600, 600)
+ax[0, 1].set_xlabel('Time (s)')
+ax[0, 1].set_ylabel('Force (N)')
+ax[0, 1].grid(True)
+ax[0, 1].legend()
+ax[0,2].plot(summary_df[channelsimt],summary_df['C02_Fr'], label ='C02_Fr', color = 'red')
+ax[0,2].plot(summary_df[channelsimt],summary_df['C02_Fy'], label ='C02_Fy', color = 'orange')
+ax[0,2].plot(summary_df[channelsimt],summary_df['C02_Fz'], label ='C02_Fz', color = 'green')
+ax[0, 2].set_title('C02')
+ax[0, 2].set_xlim(0, 0.25)
+ax[0, 2].set_ylim(-600, 600)
+ax[0, 2].set_xlabel('Time (s)')
+ax[0, 2].set_ylabel('Force (N)')
+ax[0, 2].grid(True)
+ax[0, 2].legend()
+
+ax[1,0].plot(summary_df[channelsimt],summary_df['C23_Fr'], label ='C23_Fr', color = 'red')
+ax[1,0].plot(summary_df[channelsimt],summary_df['C23_Fy'], label ='C23_Fy', color = 'orange')
+ax[1,0].plot(summary_df[channelsimt],summary_df['C23_Fz'], label ='C23_Fz', color = 'green')
+ax[1, 0].set_title('C23')
+ax[1, 0].set_xlim(0, 0.25)
+ax[1, 0].set_ylim(-600, 600)
+ax[1, 0].set_xlabel('Time (s)')
+ax[1, 0].set_ylabel('Force (N)')
+ax[1, 0].grid(True)
+ax[1, 0].legend()
+ax[1,1].plot(summary_df[channelsimt],summary_df['C34_Fr'], label ='C34_Fr', color = 'red')
+ax[1,1].plot(summary_df[channelsimt],summary_df['C34_Fy'], label ='C34_Fy', color = 'orange')
+ax[1,1].plot(summary_df[channelsimt],summary_df['C34_Fz'], label ='C34_Fz', color = 'green')
+ax[1, 1].set_title('C34')
+ax[1, 1].set_xlim(0, 0.25)
+ax[1, 1].set_ylim(-600, 600)
+ax[1, 1].set_xlabel('Time (s)')
+ax[1, 1].set_ylabel('Force (N)')
+ax[1, 1].grid(True)
+ax[1, 1].legend()
+ax[1,2].plot(summary_df[channelsimt],summary_df['C45_Fr'], label ='C45_Fr', color = 'red')
+ax[1,2].plot(summary_df[channelsimt],summary_df['C45_Fy'], label ='C45_Fy', color = 'orange')
+ax[1,2].plot(summary_df[channelsimt],summary_df['C45_Fz'], label ='C45_Fz', color = 'green')
+ax[1, 2].set_title('C45')
+ax[1, 2].set_xlim(0, 0.25)
+ax[1, 2].set_ylim(-600, 600)
+ax[1, 2].set_xlabel('Time (s)')
+ax[1, 2].set_ylabel('Force (N)')
+ax[1, 2].grid(True)
+ax[1, 2].legend()
+#
+
+ax[2,0].plot(summary_df[channelsimt],summary_df['C56_Fr'], label ='C56_Fr', color = 'red')
+ax[2,0].plot(summary_df[channelsimt],summary_df['C56_Fy'], label ='C56_Fy', color = 'orange')
+ax[2,0].plot(summary_df[channelsimt],summary_df['C56_Fz'], label ='C56_Fz', color = 'green')
+ax[2, 0].set_title('C56')
+ax[2, 0].set_xlim(0, 0.25)
+ax[2, 0].set_ylim(-600, 600)
+ax[2, 0].set_xlabel('Time (s)')
+ax[2, 0].set_ylabel('Force (N)')
+ax[2, 0].grid(True)
+ax[2, 0].legend()
+ax[2,1].plot(summary_df[channelsimt],summary_df['C67_Fr'], label ='C67_Fr', color = 'red')
+ax[2,1].plot(summary_df[channelsimt],summary_df['C67_Fy'], label ='C67_Fy', color = 'orange')
+ax[2,1].plot(summary_df[channelsimt],summary_df['C67_Fz'], label ='C67_Fz', color = 'green')
+ax[2, 1].set_title('C67')
+ax[2, 1].set_xlim(0, 0.25)
+ax[2, 1].set_ylim(-600, 600)
+ax[2, 1].set_xlabel('Time (s)')
+ax[2, 1].set_ylabel('Force (N)')
+ax[2, 1].grid(True)
+ax[2, 1].legend()
+ax[2,2].plot(summary_df[channelsimt],summary_df['C7T1_Fr'], label ='C7T1_Fr', color = 'red')
+ax[2,2].plot(summary_df[channelsimt],summary_df['C7T1_Fy'], label ='C7T1_Fy', color = 'orange')
+ax[2,2].plot(summary_df[channelsimt],summary_df['C7T1_Fz'], label ='C7T1_Fz', color = 'green')
+ax[2, 2].set_title('C7T1')
+ax[2, 2].set_xlim(0, 0.25)
+ax[2, 2].set_ylim(-600, 600)
+ax[2, 2].set_xlabel('Time (s)')
+ax[2, 2].set_ylabel('Force (N)')
+ax[2, 2].grid(True)
+ax[2, 2].legend()
+
+for item in ([ax[0,0].title, ax[0,0].xaxis.label, ax[0,0].yaxis.label] +
+             ax[0,0].get_xticklabels() + ax[0,0].get_yticklabels()):
+    item.set_fontsize(20)
+for item in ([ax[0,1].title, ax[0,1].xaxis.label, ax[0,1].yaxis.label] +
+             ax[0,1].get_xticklabels() + ax[0,1].get_yticklabels()):
+    item.set_fontsize(20)
+for item in ([ax[0,2].title, ax[0,2].xaxis.label, ax[0,2].yaxis.label] +
+             ax[0,2].get_xticklabels() + ax[0,2].get_yticklabels()):
+    item.set_fontsize(20)
+for item in ([ax[1,0].title, ax[1,0].xaxis.label, ax[1,0].yaxis.label] +
+             ax[1,0].get_xticklabels() + ax[1,0].get_yticklabels()):
+    item.set_fontsize(20)
+for item in ([ax[1,1].title, ax[1,1].xaxis.label, ax[1,1].yaxis.label] +
+             ax[1,1].get_xticklabels() + ax[1,1].get_yticklabels()):
+    item.set_fontsize(20)
+for item in ([ax[1,2].title, ax[1,2].xaxis.label, ax[1,2].yaxis.label] +
+             ax[1,2].get_xticklabels() + ax[1,2].get_yticklabels()):
+    item.set_fontsize(20)
+#
+for item in ([ax[2,0].title, ax[2,0].xaxis.label, ax[2,0].yaxis.label] +
+             ax[2,0].get_xticklabels() + ax[2,0].get_yticklabels()):
+    item.set_fontsize(20)
+for item in ([ax[2,1].title, ax[2,1].xaxis.label, ax[2,1].yaxis.label] +
+             ax[2,1].get_xticklabels() + ax[2,1].get_yticklabels()):
+    item.set_fontsize(20)
+for item in ([ax[2,2].title, ax[2,2].xaxis.label, ax[2,2].yaxis.label] +
+             ax[2,2].get_xticklabels() + ax[2,2].get_yticklabels()):
+    item.set_fontsize(20)
+
+plt.tight_layout()
+
+# plt.subplots_adjust(left = 0.17, bottom = 0.13)
+plt.savefig('Ligament Summary by Level.png')
+plt.show()
+
+###########################################################################################################
+print('complete')

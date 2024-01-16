@@ -1,0 +1,1062 @@
+import os, glob
+import re
+import numpy as np
+import pandas as pd
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+path ="C:\\Users\\kryst\\Desktop\\THESIS\\Torso Deformation\\Partioned Update with Stiffer Chest\\Activation\\Parameter\\"
+os.chdir(path)
+
+path1 = "C:\\Users\\kryst\\Desktop\\THESIS\\Torso Deformation\\Partioned Update with Stiffer Chest\\Activation\\Flexors and Extensors\\"
+filename1 = path1 + "results.csv"
+data1 = pd.read_csv(filename1, sep=',', engine = 'python', index_col=False)
+datalabel1 = "flexors & extensors"#, 0.5 MPa, 74 ms delay"
+
+path2 = "C:\\Users\\kryst\\Desktop\\THESIS\\Torso Deformation\\Partioned Update with Stiffer Chest\\Activation\\Extensors Only\\"
+filename2 = path2 + "results.csv"
+data2 = pd.read_csv(filename2, sep=',', engine = 'python', index_col=False)
+datalabel2 = "extensors"#, 0.5 MPa, 74 ms delay"
+
+path3 = "C:\\Users\\kryst\\Desktop\\THESIS\\Torso Deformation\\Partioned Update with Stiffer Chest\\Activation\\Flexors\\"
+filename3 = path3 + "results.csv"
+data3 = pd.read_csv(filename3, sep=',', engine = 'python', index_col=False)
+datalabel3 = "flexors"#, 0.5 MPa, 74 ms delay"
+
+path4 = "C:\\Users\\kryst\\Desktop\\THESIS\\Torso Deformation\\Partioned Update with Stiffer Chest\\Activation\\Passive\\"
+filename4 = path4 + "results.csv"
+data4 = pd.read_csv(filename4, sep=',', engine = 'python', index_col=False)
+datalabel4 = "passive"
+
+###64 ms delay###
+path5 = "C:\\Users\\kryst\\Desktop\\THESIS\\Torso Deformation\\Partioned Update with Stiffer Chest\\Activation\\64 ms delay\\Flexors and Extensors\\"
+filename5 = path5 + "results.csv"
+data5 = pd.read_csv(filename5, sep=',', engine = 'python', index_col=False)
+datalabel5 = "flexors & extensors, 0.5 MPa, 64 ms delay"
+
+path6 = "C:\\Users\\kryst\\Desktop\\THESIS\\Torso Deformation\\Partioned Update with Stiffer Chest\\Activation\\64 ms delay\\Extensors Only\\"
+filename6 = path6 + "results.csv"
+data6 = pd.read_csv(filename6, sep=',', engine = 'python', index_col=False)
+datalabel6 = "extensors, 0.5 MPa, 64 ms delay"
+
+path7 = "C:\\Users\\kryst\\Desktop\\THESIS\\Torso Deformation\\Partioned Update with Stiffer Chest\\Activation\\64 ms delay\\Flexors\\"
+filename7 = path7 + "results.csv"
+data7 = pd.read_csv(filename7, sep=',', engine = 'python', index_col=False)
+datalabel7 = "flexors, 0.5 MPa, 64 ms delay"
+
+###84 ms delay###
+# path8 = "C:\\Users\\kryst\\Desktop\\THESIS\\Torso Deformation\\Partioned Update with Stiffer Chest\\Activation\\84 ms delay\\Flexors and Extensors\\"
+# filename8 = path8 + "results.csv"
+# data8 = pd.read_csv(filename8, sep=',', engine = 'python', index_col=False)
+# datalabel8 = "flexors & extensors, 0.5 MPa, 84 ms delay"
+#
+# path9 = "C:\\Users\\kryst\\Desktop\\THESIS\\Torso Deformation\\Partioned Update with Stiffer Chest\\Activation\\84 ms delay\\Extensors Only\\"
+# filename9 = path9 + "results.csv"
+# data9 = pd.read_csv(filename9, sep=',', engine = 'python', index_col=False)
+# datalabel9 = "extensors, 0.5 MPa, 84 ms delay"
+#
+# path10 = "C:\\Users\\kryst\\Desktop\\THESIS\\Torso Deformation\\Partioned Update with Stiffer Chest\\Activation\\84 ms delay\\Flexors\\"
+# filename10 = path10 + "results.csv"
+# data10 = pd.read_csv(filename10, sep=',', engine = 'python', index_col=False)
+# datalabel10 = "flexors, 0.5 MPa, 84 ms delay"
+
+###1.0 max force###
+
+###Variables###
+channelsimt = 'Sim_Time_s'
+channel_Head_Dx_mm = 'Head_Dx'
+channel_Head_Dz_mm = 'Head_Dz'
+channel_Head_Ry_deg= 'Head_Ry'
+channel_Head_aDx_G = 'Head_aDx'
+channel_Head_aDz_G = 'Head_aDz'
+channel_Head_aRy_rad_s_s= 'Head_aRy'
+Sim_Head_vx = 'Head_vx'
+Sim_Head_vz = 'Head_vz'
+Sim_Head_wy= 'Head_wy'
+channel_T1_Dx_mm = 'T1_Dx'
+channel_T1_Ry_deg= 'T1_Ry'
+Sim_Rel_Head_Dx = 'Sim_Rel_Head_Dx'
+Sim_Rel_Head_Ry = 'Sim_Rel_Head_Ry'
+Sim_Rel_Head_Dz = 'Sim_Rel_Head_Dz'
+
+#############################################################################################
+data_path = "C:\\Users\\kryst\\OneDrive\\Desktop\\0000 THESIS\\Model Development\\NBDL Data\\Average Plots\\Original Units\\Compiled Test Data\\"
+
+path = data_path + "Average - Integrated.csv"
+average_df_int = pd.read_csv(path, sep=',', engine = 'python', index_col=False)
+
+path = data_path + "Standard Deviation - Integrated.csv"
+stdev_df_int = pd.read_csv(path, sep=',', engine = 'python', index_col=False)
+
+low_int = average_df_int-stdev_df_int
+high_int = average_df_int+stdev_df_int
+
+path = data_path + "Average - Integrated Rotation.csv"
+average_df_int_rot = pd.read_csv(path, sep=',', engine = 'python', index_col=False)
+
+path = data_path + "Standard Deviation - Integrated Rotation.csv"
+stdev_df_int_rot = pd.read_csv(path, sep=',', engine = 'python', index_col=False)
+
+low_int_rot = average_df_int_rot-stdev_df_int_rot
+high_int_rot = average_df_int_rot+stdev_df_int_rot
+# print(average_df_int)
+####################################################
+data_path = "C:\\Users\\kryst\\OneDrive\\Desktop\\0000 THESIS\\Model Development\\NBDL Data\\Average Plots\\Original Units\\Compiled Test Data\\"
+
+path = data_path + "Average.csv"
+average_df = pd.read_csv(path, sep=',', engine = 'python', index_col=False)
+
+path = data_path + "Standard Deviation.csv"
+stdev_df = pd.read_csv(path, sep=',', engine = 'python', index_col=False)
+
+low = average_df-stdev_df
+high = average_df+stdev_df
+
+####################################################
+
+panzer_data_path = "C:\\Users\\kryst\\OneDrive\\Desktop\\0000 THESIS\\Model Development\\NBDL Data\\Digitized Literature Data\\Panzer Accel Results Comparison\\"
+
+panzer_x_path = panzer_data_path + "Passive X Accel.csv"
+average_panzer_x_df = pd.read_csv(panzer_x_path, sep=',', engine = 'python', index_col=False)
+
+panzer_y_path = panzer_data_path + "Passive Y Rot Accel.csv"
+average_panzer_y_df = pd.read_csv(panzer_y_path, sep=',', engine = 'python', index_col=False)
+
+panzer_z_path = panzer_data_path + "Passive Z Accel.csv"
+average_panzer_z_df = pd.read_csv(panzer_z_path, sep=',', engine = 'python', index_col=False)
+
+#######################################################
+
+
+channelt = 'Time_s'
+Head_Dx_mm_int_19 = 'Head_Dx_mm_int_19'
+Sled_Dx_mm_int_57 = 'Sled_Dx_mm_int_57'
+Spine_Dx_mm_int_47 = 'Spine_Dx_mm_int_47'
+Head_Dz_mm_int_21 = 'Head_Dz_mm_int_21'
+Spine_Dz_mm_int_49 = 'Spine_Dz_mm_int_49'
+Head_ao_deg_int_22 = 'Head_ao_deg_22'
+Head_ao_deg_23 = 'Head_ao_deg_23'
+Head_ao_deg_int_24 = 'Head_ao_deg_24'
+Spine_ao_deg_int_50 = 'Spine_ao_deg_50'
+Spine_ao_deg_int_51 = 'Spine_ao_deg_51'
+Spine_ao_deg_int_52 = 'Spine_ao_deg_52'
+Head_Ax_G_19 = 'Head_Ax_G_19'
+Head_Az_G_21='Head_Az_G_21'
+Spine_Ax_G_47='Spine_Ax_G_47'
+Head_ao_rad_s_s_23 = 'Head_ao_rad/s^2_23'
+Head_Vx_kph = "Head_Vx_kph_10"
+Head_Vz_kph = "Head_Vz_kph_14"
+Head_wy_rad_s = "Head_wx_rad/s_17"
+
+Sim_Head_Dx = 'Head_Dx'
+Sim_Head_Dz = 'Head_Dz'
+Sim_Head_Ry = 'Head_Ry'
+Rel_Head_Dx = 'Rel_Head_Dx_mm'
+Rel_Head_Dz = 'Head_Dz_mm_int_21'
+Rel_Head_to_Sled_Dx_mm = 'Rel_Head_to_Sled_Dx_mm'
+
+average_df_int[Rel_Head_Dx] = average_df_int[Rel_Head_Dx]/(1)
+low_int[Rel_Head_Dx] = low_int[Rel_Head_Dx]/(1)
+high_int[Rel_Head_Dx] = high_int[Rel_Head_Dx]/(1)
+
+
+average_df[Head_Ax_G_19] = average_df[Head_Ax_G_19]*(-1)
+low[Head_Ax_G_19] = low[Head_Ax_G_19]*(-1)
+high[Head_Ax_G_19] = high[Head_Ax_G_19]*(-1)
+
+###PLOT###
+
+# mpl.use('TkAgg')  # or can use 'TkAgg' or Qt5Agg, whatever you have/prefer
+fig,ax = plt.subplots()
+ax.plot(data1[channelsimt],data1[channel_Head_Dx_mm], label =datalabel1)
+ax.plot(data2[channelsimt],data2[channel_Head_Dx_mm], label =datalabel2)
+ax.plot(data3[channelsimt],data3[channel_Head_Dx_mm], label =datalabel3)
+ax.plot(data4[channelsimt],data4[channel_Head_Dx_mm], label =datalabel4)
+# ax.plot(average_df[channelt],data[channel_Head_Ry_deg], label =channel_Head_Ry_deg)
+
+ax.set_xlim(0, 0.25)
+ax.set_xlabel('Time (s)')
+ax.set_ylabel('Dx (mm)')
+ax.grid(True)
+ax.legend()
+ax.set_title('Simulation Results - Head X Displacement (mm)')
+plt.subplots_adjust(left = 0.17, bottom = 0.13)
+plt.savefig('Parameter - Head X Displacement mm.png')
+plt.show()
+
+# mpl.use('TkAgg')  # or can use 'TkAgg' or Qt5Agg, whatever you have/prefer
+fig,ax = plt.subplots()
+ax.plot(data1[channelsimt],data1[channel_Head_Dz_mm], label =datalabel1)
+ax.plot(data2[channelsimt],data2[channel_Head_Dz_mm], label =datalabel2)
+ax.plot(data3[channelsimt],data3[channel_Head_Dz_mm], label =datalabel3)
+ax.plot(data4[channelsimt],data4[channel_Head_Dz_mm], label =datalabel4)
+# ax.plot(average_df[channelt],data[channel_Head_Ry_deg], label =channel_Head_Ry_deg)
+
+ax.set_xlim(0, 0.25)
+ax.set_xlabel('Time (s)')
+ax.set_ylabel('Dz (mm)')
+ax.grid(True)
+ax.legend()
+ax.set_title('Simulation Results - Head Z Displacement (mm)')
+plt.subplots_adjust(left = 0.17, bottom = 0.13)
+plt.savefig('Parameter - Head Z Displacement mm.png')
+plt.show()
+
+# mpl.use('TkAgg')  # or can use 'TkAgg' or Qt5Agg, whatever you have/prefer
+fig,ax = plt.subplots()
+# ax.plot(average_df[channelt],data[channel_Head_Dx_mm], label =channel_Head_Dx_mm)
+ax.plot(data1[channelsimt],data1[channel_Head_Ry_deg], label =datalabel1)
+ax.plot(data2[channelsimt],data2[channel_Head_Ry_deg], label =datalabel2)
+ax.plot(data3[channelsimt],data3[channel_Head_Ry_deg], label =datalabel3)
+ax.plot(data4[channelsimt],data4[channel_Head_Ry_deg], label =datalabel4)
+
+ax.set_xlim(0, 0.25)
+ax.set_xlabel('Time (s)')
+ax.set_ylabel('Ry (deg)')
+ax.grid(True)
+ax.legend()
+ax.set_title('Head Y Rotation (deg)')
+plt.subplots_adjust(left = 0.17, bottom = 0.13)
+plt.savefig('Parameter - Simulation Results - Head Y Rotation deg.png')
+plt.show()
+
+# mpl.use('TkAgg')  # or can use 'TkAgg' or Qt5Agg, whatever you have/prefer
+fig,ax = plt.subplots()
+ax.plot(data1[channelsimt],data1[channel_Head_aDx_G], label =datalabel1)
+ax.plot(data2[channelsimt],data2[channel_Head_aDx_G], label =datalabel2)
+ax.plot(data3[channelsimt],data3[channel_Head_aDx_G], label =datalabel3)
+ax.plot(data4[channelsimt],data4[channel_Head_aDx_G], label =datalabel4)
+# ax.plot(average_df[channelt],data[channel_Head_Ry_deg], label =channel_Head_Ry_deg)
+
+ax.set_xlim(0, 0.25)
+ax.set_xlabel('Time (s)')
+ax.set_ylabel('Ax (G)')
+ax.grid(True)
+ax.legend()
+ax.set_title('Simulation Results - Head X Acceleration G')
+plt.subplots_adjust(left = 0.17, bottom = 0.13)
+plt.savefig('Parameter - Head X Acceleration G.png')
+plt.show()
+
+# mpl.use('TkAgg')  # or can use 'TkAgg' or Qt5Agg, whatever you have/prefer
+fig,ax = plt.subplots()
+ax.plot(data1[channelsimt],data1[channel_Head_aDx_G], label =datalabel1)
+ax.plot(data2[channelsimt],data2[channel_Head_aDx_G], label =datalabel2)
+ax.plot(data3[channelsimt],data3[channel_Head_aDx_G], label =datalabel3)
+ax.plot(data4[channelsimt],data4[channel_Head_aDx_G], label =datalabel4)
+# ax.plot(average_df[channelt],data[channel_Head_Ry_deg], label =channel_Head_Ry_deg)
+
+ax.plot(average_df[channelt],average_df[Head_Ax_G_19], label =Head_Ax_G_19, color = "red")
+ax.plot(average_df[channelt],low[Head_Ax_G_19],color = "lightpink")
+ax.plot(average_df[channelt],high[Head_Ax_G_19],color = "lightpink")
+
+ax.set_xlim(0, 0.25)
+ax.set_xlabel('Time (s)')
+ax.set_ylabel('Ax (G)')
+ax.grid(True)
+ax.legend()
+ax.set_title('Compare Results - Head X Acceleration G')
+plt.subplots_adjust(left = 0.17, bottom = 0.13)
+plt.savefig('Parameter - Compare Head X Acceleration G.png')
+plt.show()
+
+# mpl.use('TkAgg')  # or can use 'TkAgg' or Qt5Agg, whatever you have/prefer
+fig,ax = plt.subplots()
+ax.plot(data1[channelsimt],data1[channel_Head_aDx_G], label =datalabel1)
+ax.plot(data2[channelsimt],data2[channel_Head_aDx_G], label =datalabel2)
+ax.plot(data3[channelsimt],data3[channel_Head_aDx_G], label =datalabel3)
+ax.plot(data4[channelsimt],data4[channel_Head_aDx_G], label =datalabel4)
+# ax.plot(average_df[channelt],data[channel_Head_Ry_deg], label =channel_Head_Ry_deg)
+
+ax.set_xlim(0, 0.25)
+ax.set_xlabel('Time (s)')
+ax.set_ylabel('Ax (G)')
+ax.grid(True)
+ax.legend()
+ax.set_title('Simulation Results - Head X Acceleration G')
+plt.subplots_adjust(left = 0.17, bottom = 0.13)
+plt.savefig('Parameter - Head X Acceleration G.png')
+plt.show()
+
+# mpl.use('TkAgg')  # or can use 'TkAgg' or Qt5Agg, whatever you have/prefer
+fig,ax = plt.subplots()
+ax.plot(data4[channelsimt],data4[channel_Head_aDx_G], label =datalabel4)
+ax.plot(average_panzer_x_df["x"]/1000,average_panzer_x_df["Passive X Accel"]*-1, label ="Panzer Head X Accel.")
+# ax.plot(average_df[channelt],data[channel_Head_Ry_deg], label =channel_Head_Ry_deg)
+
+# ax.plot(average_df[channelt],average_df[Head_Ax_G_19], label =Head_Ax_G_19, color = "red")
+# ax.plot(average_df[channelt],low[Head_Ax_G_19],color = "lightpink")
+# ax.plot(average_df[channelt],high[Head_Ax_G_19],color = "lightpink")
+
+ax.set_xlim(0, 0.25)
+ax.set_xlabel('Time (s)')
+ax.set_ylabel('Ax (G)')
+ax.grid(True)
+ax.legend()
+ax.set_title('Compare Panzer Results - Head X Acceleration G')
+plt.subplots_adjust(left = 0.17, bottom = 0.13)
+plt.savefig('Compare Panzer Head X Acceleration G.png')
+plt.show()
+
+# mpl.use('TkAgg')  # or can use 'TkAgg' or Qt5Agg, whatever you have/prefer
+fig,ax = plt.subplots()
+ax.plot(data1[channelsimt],data1[channel_Head_aDz_G], label =datalabel1)
+ax.plot(data2[channelsimt],data2[channel_Head_aDz_G], label =datalabel2)
+ax.plot(data3[channelsimt],data3[channel_Head_aDz_G], label =datalabel3)
+ax.plot(data4[channelsimt],data4[channel_Head_aDz_G], label =datalabel4)
+# ax.plot(average_df[channelt],data[channel_Head_Ry_deg], label =channel_Head_Ry_deg)
+
+ax.set_xlim(0, 0.25)
+ax.set_xlabel('Time (s)')
+ax.set_ylabel('Az (G)')
+ax.grid(True)
+ax.legend()
+ax.set_title('Simulation Results - Head Z Acceleration G')
+plt.subplots_adjust(left = 0.17, bottom = 0.13)
+plt.savefig('Parameter - Head Z Acceleration G.png')
+plt.show()
+
+# mpl.use('TkAgg')  # or can use 'TkAgg' or Qt5Agg, whatever you have/prefer
+fig,ax = plt.subplots()
+ax.plot(data1[channelsimt],data1[channel_Head_aDz_G], label =datalabel1)
+ax.plot(data2[channelsimt],data2[channel_Head_aDz_G], label =datalabel2)
+ax.plot(data3[channelsimt],data3[channel_Head_aDz_G], label =datalabel3)
+ax.plot(data4[channelsimt],data4[channel_Head_aDz_G], label =datalabel4)
+# ax.plot(average_df[channelt],data[channel_Head_Ry_deg], label =channel_Head_Ry_deg)
+
+ax.plot(average_df[channelt],average_df[Head_Az_G_21], label =Head_Az_G_21, color = "red")
+ax.plot(average_df[channelt],low[Head_Az_G_21],color = "lightpink")
+ax.plot(average_df[channelt],high[Head_Az_G_21],color = "lightpink")
+
+ax.set_xlim(0, 0.25)
+ax.set_ylim(-100, 50)
+ax.set_xlabel('Time (s)')
+ax.set_ylabel('Az (G)')
+ax.grid(True)
+ax.legend()
+ax.set_title('Compare Results - Head Z Acceleration G')
+plt.subplots_adjust(left = 0.17, bottom = 0.13)
+plt.savefig('Parameter - Compare Head Z Acceleration G.png')
+plt.show()
+
+# mpl.use('TkAgg')  # or can use 'TkAgg' or Qt5Agg, whatever you have/prefer
+fig,ax = plt.subplots()
+ax.plot(data4[channelsimt],data4[channel_Head_aDz_G], label =datalabel4)
+ax.plot(average_panzer_z_df["x"]/1000,average_panzer_z_df["Passive Z Accel"], label ="Panzer Head Z Accel.")
+# ax.plot(average_df[channelt],data[channel_Head_Ry_deg], label =channel_Head_Ry_deg)
+
+# ax.plot(average_df[channelt],average_df[Head_Az_G_21], label =Head_Az_G_21, color = "red")
+# ax.plot(average_df[channelt],low[Head_Az_G_21],color = "lightpink")
+# ax.plot(average_df[channelt],high[Head_Az_G_21],color = "lightpink")
+
+ax.set_xlim(0, 0.25)
+ax.set_ylim(-100, 50)
+ax.set_xlabel('Time (s)')
+ax.set_ylabel('Az (G)')
+ax.grid(True)
+ax.legend()
+ax.set_title('Compare Panzer Results - Head Z Acceleration G')
+plt.subplots_adjust(left = 0.17, bottom = 0.13)
+plt.savefig('Compare Panzer Head Z Acceleration G.png')
+plt.show()
+
+# mpl.use('TkAgg')  # or can use 'TkAgg' or Qt5Agg, whatever you have/prefer
+fig,ax = plt.subplots()
+# ax.plot(average_df[channelt],data[channel_Head_Dx_mm], label =channel_Head_Dx_mm)
+ax.plot(data1[channelsimt],data1[channel_Head_aRy_rad_s_s], label =datalabel1)
+ax.plot(data2[channelsimt],data2[channel_Head_aRy_rad_s_s], label =datalabel2)
+ax.plot(data3[channelsimt],data3[channel_Head_aRy_rad_s_s], label =datalabel3)
+ax.plot(data4[channelsimt],data4[channel_Head_aRy_rad_s_s], label =datalabel4)
+
+ax.set_xlim(0, 0.25)
+ax.set_xlabel('Time (s)')
+ax.set_ylabel('Ry (rad-s-s)')
+ax.grid(True)
+ax.legend()
+ax.set_title('Head Y Rotation Acceleration (rad/s/s)')
+plt.subplots_adjust(left = 0.17, bottom = 0.13)
+plt.savefig('Parameter - Simulation Results - Head Y Rotation Accel.png')
+plt.show()
+
+# mpl.use('TkAgg')  # or can use 'TkAgg' or Qt5Agg, whatever you have/prefer
+fig,ax = plt.subplots()
+# ax.plot(average_df[channelt],data[channel_Head_Dx_mm], label =channel_Head_Dx_mm)
+ax.plot(data1[channelsimt],data1[channel_Head_aRy_rad_s_s], label =datalabel1)
+ax.plot(data2[channelsimt],data2[channel_Head_aRy_rad_s_s], label =datalabel2)
+ax.plot(data3[channelsimt],data3[channel_Head_aRy_rad_s_s], label =datalabel3)
+ax.plot(data4[channelsimt],data4[channel_Head_aRy_rad_s_s], label =datalabel4)
+
+ax.plot(average_df[channelt],average_df[Head_ao_rad_s_s_23], label =Head_ao_rad_s_s_23, color = "red")
+ax.plot(average_df[channelt],low[Head_ao_rad_s_s_23],color = "lightpink")
+ax.plot(average_df[channelt],high[Head_ao_rad_s_s_23],color = "lightpink")
+
+ax.set_xlim(0, 0.25)
+ax.set_ylim(-2000, 2500)
+ax.set_xlabel('Time (s)')
+ax.set_ylabel('Ry (rad-s-s)')
+ax.grid(True)
+ax.legend()
+ax.set_title('Compare Head Y Rotation Acceleration (rad/s/s)')
+plt.subplots_adjust(left = 0.17, bottom = 0.13)
+plt.savefig('Parameter - Compare Head Y Rotation Acceleration rad-s-s.png')
+plt.show()
+
+# mpl.use('TkAgg')  # or can use 'TkAgg' or Qt5Agg, whatever you have/prefer
+fig,ax = plt.subplots()
+# ax.plot(average_df[channelt],data[channel_Head_Dx_mm], label =channel_Head_Dx_mm)
+ax.plot(data4[channelsimt],data4[channel_Head_aRy_rad_s_s], label =datalabel4)
+ax.plot(average_panzer_y_df["x"]/1000,average_panzer_y_df["Passive Y Rot. Accel"], label ="Panzer Head Y Rot Accel.")
+
+# ax.plot(average_df[channelt],average_df[Head_ao_rad_s_s_23], label =Head_ao_rad_s_s_23, color = "red")
+# ax.plot(average_df[channelt],low[Head_ao_rad_s_s_23],color = "lightpink")
+# ax.plot(average_df[channelt],high[Head_ao_rad_s_s_23],color = "lightpink")
+
+ax.set_xlim(0, 0.25)
+ax.set_ylim(-5000, 2500)
+ax.set_xlabel('Time (s)')
+ax.set_ylabel('Ry (rad-s-s)')
+ax.grid(True)
+ax.legend()
+ax.set_title('Compare Panzer Head Y Rotation Acceleration (rad/s/s)')
+plt.subplots_adjust(left = 0.17, bottom = 0.13)
+plt.savefig('Compare Panzer Head Y Rotation Acceleration rad-s-s.png')
+plt.show()
+
+# mpl.use('TkAgg')  # or can use 'TkAgg' or Qt5Agg, whatever you have/prefer
+fig,ax = plt.subplots()
+# ax.plot(average_df[channelt],data[channel_Head_Dx_mm], label =channel_Head_Dx_mm)
+ax.plot(data4[channelsimt],data4[channel_Head_aRy_rad_s_s], label =datalabel4)
+ax.plot(average_panzer_y_df["x"]/1000,average_panzer_y_df["Passive Y Rot. Accel"], label ="Panzer Head Y Rot Accel.")
+
+# ax.plot(average_df[channelt],average_df[Head_ao_rad_s_s_23], label =Head_ao_rad_s_s_23, color = "red")
+# ax.plot(average_df[channelt],low[Head_ao_rad_s_s_23],color = "lightpink")
+# ax.plot(average_df[channelt],high[Head_ao_rad_s_s_23],color = "lightpink")
+
+ax.set_xlim(0, 0.25)
+# ax.set_ylim(-2000, 2500)
+ax.set_xlabel('Time (s)')
+ax.set_ylabel('Ry (rad-s-s)')
+ax.grid(True)
+ax.legend()
+ax.set_title('Compare Panzer Head Y Rotation Acceleration (rad/s/s) - NL')
+plt.subplots_adjust(left = 0.17, bottom = 0.13)
+plt.savefig('Compare Panzer Head Y Rotation Acceleration rad-s-s - NL.png')
+plt.show()
+
+# mpl.use('TkAgg')  # or can use 'TkAgg' or Qt5Agg, whatever you have/prefer
+fig,ax = plt.subplots()
+ax.plot(data4[channelsimt],data4[channel_T1_Dx_mm], label =datalabel4)
+# ax.plot(average_df[channelt],data[channel_T1_Ry_deg], label =channel_T1_Ry_deg)
+
+ax.set_xlim(0, 0.25)
+ax.set_xlabel('Time (s)')
+ax.set_ylabel('Dx (mm)')
+ax.grid(True)
+ax.legend()
+ax.set_title('Simulation Results - T1 X Displacement (mm)')
+plt.subplots_adjust(left = 0.17, bottom = 0.13)
+plt.savefig('T1 X Displacement mm.png')
+plt.show()
+
+# mpl.use('TkAgg')  # or can use 'TkAgg' or Qt5Agg, whatever you have/prefer
+fig,ax = plt.subplots()
+# ax.plot(average_df[channelt],data[channel_T1_Dx_mm], label =channel_T1_Dx_mm)
+ax.plot(data4[channelsimt],data4[channel_T1_Ry_deg], label =datalabel4)
+
+ax.set_xlim(0, 0.25)
+ax.set_xlabel('Time (s)')
+ax.set_ylabel('Ry (deg)')
+ax.grid(True)
+ax.legend()
+ax.set_title('T1 Y Rotation (deg)')
+plt.subplots_adjust(left = 0.17, bottom = 0.13)
+plt.savefig('Simulation Results - T1 Y Rotation deg.png')
+plt.show()
+#######################################################################################################################
+# mpl.use('TkAgg')  # or can use 'TkAgg' or Qt5Agg, whatever you have/prefer
+fig,ax = plt.subplots()
+ax.plot(data1[channelsimt],data1[Sim_Rel_Head_Dx], label =datalabel1)
+ax.plot(data2[channelsimt],data2[Sim_Rel_Head_Dx], label =datalabel2)
+ax.plot(data3[channelsimt],data3[Sim_Rel_Head_Dx], label =datalabel3)
+ax.plot(data4[channelsimt],data4[Sim_Rel_Head_Dx], label =datalabel4)
+# ax.plot(average_df[channelt],data[channel_Head_Ry_deg], label =channel_Head_Ry_deg)
+
+ax.plot(average_df_int[channelt],average_df_int[Rel_Head_Dx], label =Rel_Head_Dx, color = "red")
+ax.plot(average_df_int[channelt],low_int[Rel_Head_Dx],color = "lightpink")
+ax.plot(average_df_int[channelt],high_int[Rel_Head_Dx],color = "lightpink")
+
+ax.set_xlim(0, 0.25)
+ax.set_xlabel('Time (s)')
+ax.set_ylabel('Dx (mm)')
+ax.grid(True)
+ax.legend()
+ax.set_title('Simulation Results - Rel Head X Displacement (mm)')
+plt.subplots_adjust(left = 0.17, bottom = 0.13)
+plt.savefig('Parameter - Rel Head X Displacement mm.png')
+plt.show()
+
+# mpl.use('TkAgg')  # or can use 'TkAgg' or Qt5Agg, whatever you have/prefer
+fig,ax = plt.subplots()
+ax.plot(data1[channelsimt],data1[Sim_Rel_Head_Dz], label =datalabel1)
+ax.plot(data2[channelsimt],data2[Sim_Rel_Head_Dz], label =datalabel2)
+ax.plot(data3[channelsimt],data3[Sim_Rel_Head_Dz], label =datalabel3)
+ax.plot(data4[channelsimt],data4[Sim_Rel_Head_Dz], label =datalabel4)
+# ax.plot(average_df[channelt],data[channel_Head_Ry_deg], label =channel_Head_Ry_deg)
+
+ax.plot(average_df_int[channelt],average_df_int[Rel_Head_Dz], label ='Rel_Head_Dz', color = "red")
+ax.plot(average_df_int[channelt],low_int[Rel_Head_Dz],color = "lightpink")
+ax.plot(average_df_int[channelt],high_int[Rel_Head_Dz],color = "lightpink")
+
+ax.set_xlim(0, 0.25)
+ax.set_xlabel('Time (s)')
+ax.set_ylabel('Dz (mm)')
+ax.grid(True)
+ax.legend()
+ax.set_title('Simulation Results - Rel Head Z Displacement (mm)')
+plt.subplots_adjust(left = 0.17, bottom = 0.13)
+plt.savefig('Parameter - Rel Head Z Displacement mm.png')
+plt.show()
+
+# mpl.use('TkAgg')  # or can use 'TkAgg' or Qt5Agg, whatever you have/prefer
+fig,ax = plt.subplots()
+# ax.plot(average_df[channelt],data[channel_Head_Dx_mm], label =channel_Head_Dx_mm)
+ax.plot(data1[channelsimt],data1[Sim_Rel_Head_Ry], label =datalabel1)
+ax.plot(data2[channelsimt],data2[Sim_Rel_Head_Ry], label =datalabel2)
+ax.plot(data3[channelsimt],data3[Sim_Rel_Head_Ry], label =datalabel3)
+ax.plot(data4[channelsimt],data4[Sim_Rel_Head_Ry], label =datalabel4)
+
+ax.plot(average_df_int_rot[channelt],average_df_int_rot[Head_ao_deg_23], label ='Head_ao_deg_23', color = "red")
+ax.plot(average_df_int_rot[channelt],low_int_rot[Head_ao_deg_23],color = "lightpink")
+ax.plot(average_df_int_rot[channelt],high_int_rot[Head_ao_deg_23],color = "lightpink")
+
+ax.set_xlim(0, 0.25)
+ax.set_xlabel('Time (s)')
+ax.set_ylabel('Ry (deg)')
+ax.grid(True)
+ax.legend()
+ax.set_title('Rel Head Y Rotation (deg)')
+plt.subplots_adjust(left = 0.17, bottom = 0.13)
+plt.savefig('Parameter - Rel Simulation Results - Head Y Rotation deg.png')
+plt.show()
+
+# mpl.use('TkAgg')  # or can use 'TkAgg' or Qt5Agg, whatever you have/prefer
+fig,ax = plt.subplots()
+ax.plot(data1[channelsimt],data1[channel_Head_aDx_G], label =datalabel1)
+ax.plot(data2[channelsimt],data2[channel_Head_aDx_G], label =datalabel2)
+ax.plot(data3[channelsimt],data3[channel_Head_aDx_G], label =datalabel3)
+ax.plot(data4[channelsimt],data4[channel_Head_aDx_G], label =datalabel4)
+# ax.plot(average_df[channelt],data[channel_Head_Ry_deg], label =channel_Head_Ry_deg)
+
+ax.set_xlim(0, 0.25)
+ax.set_xlabel('Time (s)')
+ax.set_ylabel('Ax (G)')
+ax.grid(True)
+ax.legend()
+ax.set_title('Simulation Results - Head X Acceleration G')
+plt.subplots_adjust(left = 0.17, bottom = 0.13)
+plt.savefig('Parameter - Head X Acceleration G.png')
+plt.show()
+
+# # mpl.use('TkAgg')  # or can use 'TkAgg' or Qt5Agg, whatever you have/prefer
+# fig,ax = plt.subplots()
+# # ax.plot(data[channelsimt],data[channel_Head_aDx_G], label =channel_Head_aDx_G)
+# # ax.plot(average_df[channelt],data[channel_Head_Ry_deg], label =channel_Head_Ry_deg)
+#
+# ax.plot(average_df_int[channelt],average_df_int['Spine_Dx_mm_int_47'], label ='Spine_Dx_mm_int_47', color = "red")
+# ax.plot(average_df_int[channelt],low_int['Spine_Dx_mm_int_47'],color = "lightpink")
+# ax.plot(average_df_int[channelt],high_int['Spine_Dx_mm_int_47'],color = "lightpink")
+#
+# ax.set_xlim(0, 0.25)
+# ax.set_xlabel('Time (s)')
+# ax.set_ylabel('Dx (mm)')
+# ax.grid(True)
+# ax.legend()
+# ax.set_title('Spine X Displacement - Integrated')
+# plt.subplots_adjust(left = 0.17, bottom = 0.13)
+# plt.savefig('Spine X Displacement - Integrated.png')
+# plt.show()
+new_path = "C:\\Users\\kryst\\OneDrive\\Desktop\\0000 THESIS\\Model Development\\NBDL Data\\Average Plots\\Original Units\\Compiled Test Data\\"
+digitized_path = "C:\\Users\\kryst\\OneDrive\\Desktop\\0000 THESIS\\Model Development\\NBDL Data\\Digitized Literature Data\\"
+
+read_path = digitized_path + "T1 Rotation - Thunnissen 1995 - Update.csv"
+Spine_Ry_Thunnissen = pd.read_csv(read_path, sep=',', engine = 'python', index_col=False)
+Spine_Ry_Thunnissen['Time_ms'] = Spine_Ry_Thunnissen['Time_ms']/1000
+Spine_Ry_Thunnissen.rename(columns = {'Time_ms':'Time_s'}, inplace = True)
+Spine_Ry_Thunnissen.to_excel(new_path+"T1 Rotation - Thunnissen 1995 - Average Ry.xlsx")
+
+figure, ax = plt.subplots(4, 3,figsize=(40,30))
+plt.rcParams['font.size'] = '20'
+# fig = plt.figure(figsize=(16,16))
+ax[0, 0].plot(data1[channelsimt],data1[Sim_Rel_Head_Dx], label =datalabel1)
+ax[0, 0].plot(data2[channelsimt],data2[Sim_Rel_Head_Dx], label =datalabel2)
+ax[0, 0].plot(data3[channelsimt],data3[Sim_Rel_Head_Dx], label =datalabel3)
+ax[0, 0].plot(data4[channelsimt],data4[Sim_Rel_Head_Dx], label =datalabel4)
+
+ax[0, 0].plot(average_df_int[channelt],average_df_int[Rel_Head_Dx], label ='Rel_Head_Dx', color = "red")
+ax[0, 0].plot(average_df_int[channelt],low_int[Rel_Head_Dx], color = "lightpink")
+ax[0, 0].plot(average_df_int[channelt],high_int[Rel_Head_Dx], color = "lightpink")
+
+
+ax[0, 0].set_title('Rel. Head X Disp.')
+ax[0, 0].set_xlim(0, 0.25)
+ax[0, 0].set_xlabel('Time (s)')
+ax[0, 0].set_ylabel('Dx (mm)')
+ax[0, 0].grid(True)
+ax[0, 0].legend()
+
+ax[1, 0].plot(data1[channelsimt],data1[Sim_Head_Dx], label =datalabel1)
+ax[1, 0].plot(data2[channelsimt],data2[Sim_Head_Dx], label =datalabel2)
+ax[1, 0].plot(data3[channelsimt],data3[Sim_Head_Dx], label =datalabel3)
+ax[1, 0].plot(data4[channelsimt],data4[Sim_Head_Dx], label =datalabel4)
+
+ax[1, 0].plot(average_df_int[channelt],average_df_int['Spine_Dx_mm_int_47']*-1, label ='Spine_Dx_mm_int_47', color = "green")
+ax[1, 0].plot(average_df_int[channelt],low_int['Spine_Dx_mm_int_47']*-1,color = "lightgreen")
+ax[1, 0].plot(average_df_int[channelt],high_int['Spine_Dx_mm_int_47']*-1,color = "lightgreen")
+
+ax[1, 0].plot(average_df_int[channelt],average_df_int['Head_Dx_mm_int_19']*-1, label ='Head_Dx_mm_int_19', color = "red")
+ax[1, 0].plot(average_df_int[channelt],low_int['Head_Dx_mm_int_19']*-1,color = "lightpink")
+ax[1, 0].plot(average_df_int[channelt],high_int['Head_Dx_mm_int_19']*-1,color = "lightpink")
+
+ax[1, 0].set_title('Head X Disp.')
+ax[1, 0].set_xlim(0, 0.25)
+ax[1, 0].set_xlabel('Time (s)')
+ax[1, 0].set_ylabel('Dx (mm)')
+ax[1, 0].grid(True)
+ax[1, 0].legend()
+
+ax[0, 1].plot(data1[channelsimt],data1[Sim_Rel_Head_Dz], label =datalabel1)
+ax[0, 1].plot(data2[channelsimt],data2[Sim_Rel_Head_Dz], label =datalabel2)
+ax[0, 1].plot(data3[channelsimt],data3[Sim_Rel_Head_Dz], label =datalabel3)
+ax[0, 1].plot(data4[channelsimt],data4[Sim_Rel_Head_Dz], label =datalabel4)
+
+ax[0, 1].plot(average_df_int[channelt],average_df_int['Head_Dz_mm_int_21'], label ='Head_Dz_mm_int_21', color = "red")
+ax[0, 1].plot(average_df_int[channelt],low_int['Head_Dz_mm_int_21'],color = "lightpink")
+ax[0, 1].plot(average_df_int[channelt],high_int['Head_Dz_mm_int_21'],color = "lightpink")
+
+ax[0, 1].set_title('Rel. Head Z Disp.')
+ax[0, 1].set_xlim(0, 0.25)
+ax[0, 1].set_xlabel('Time (s)')
+ax[0, 1].set_ylabel('Dz (mm)')
+ax[0, 1].grid(True)
+ax[0, 1].legend()
+
+
+ax[1, 1].plot(data1[channelsimt],data1[Sim_Rel_Head_Dz]*-1, label =datalabel1)
+ax[1, 1].plot(data2[channelsimt],data2[Sim_Rel_Head_Dz]*-1, label =datalabel2)
+ax[1, 1].plot(data3[channelsimt],data3[Sim_Rel_Head_Dz]*-1, label =datalabel3)
+ax[1, 1].plot(data4[channelsimt],data4[Sim_Rel_Head_Dz]*-1, label =datalabel4)
+
+ax[1, 1].plot(average_df_int[channelt],average_df_int['Head_Dz_mm_int_21'], label ='Head_Dz_mm_int_21', color = "red")
+ax[1, 1].plot(average_df_int[channelt],low_int['Head_Dz_mm_int_21'],color = "lightpink")
+ax[1, 1].plot(average_df_int[channelt],high_int['Head_Dz_mm_int_21'],color = "lightpink")
+
+ax[1, 1].set_title('Head Z Disp. (+Rel.)')
+ax[1, 1].set_xlim(0, 0.25)
+ax[1, 1].set_xlabel('Time (s)')
+ax[1, 1].set_ylabel('Dz (mm)')
+ax[1, 1].grid(True)
+ax[1, 1].legend()
+
+ax[0, 2].plot(data1[channelsimt],data1[Sim_Rel_Head_Ry], label =datalabel1)
+ax[0, 2].plot(data2[channelsimt],data2[Sim_Rel_Head_Ry], label =datalabel2)
+ax[0, 2].plot(data3[channelsimt],data3[Sim_Rel_Head_Ry], label =datalabel3)
+ax[0, 2].plot(data4[channelsimt],data4[Sim_Rel_Head_Ry], label =datalabel4)
+
+ax[0, 2].set_title('Rel. Head Y Rot.')
+ax[0, 2].set_xlim(0, 0.25)
+ax[0, 2].set_xlabel('Time (s)')
+ax[0, 2].set_ylabel('Ry (deg)')
+ax[0, 2].grid(True)
+ax[0, 2].legend()
+
+ax[1, 2].plot(data1[channelsimt],data1[Sim_Rel_Head_Ry], label =datalabel1)
+ax[1, 2].plot(data2[channelsimt],data2[Sim_Rel_Head_Ry], label =datalabel2)
+ax[1, 2].plot(data3[channelsimt],data3[Sim_Rel_Head_Ry], label =datalabel3)
+ax[1, 2].plot(data4[channelsimt],data4[Sim_Rel_Head_Ry], label =datalabel4)
+
+ax[1, 2].plot(average_df_int_rot[channelt],average_df_int_rot[Head_ao_deg_23], label ='Head_ao_deg_23', color = "red")
+ax[1, 2].plot(average_df_int_rot[channelt],low_int_rot[Head_ao_deg_23],color = "lightpink")
+ax[1, 2].plot(average_df_int_rot[channelt],high_int_rot[Head_ao_deg_23],color = "lightpink")
+
+ax[1, 2].plot(Spine_Ry_Thunnissen[channelt],Spine_Ry_Thunnissen['Ry_Average'], label ='Spine_Ry_Thunnissen', color = "green")
+
+ax[1, 2].set_title('Head Y Rot.')
+ax[1, 2].set_xlim(0, 0.25)
+ax[1, 2].set_xlabel('Time (s)')
+ax[1, 2].set_ylabel('Ry (deg)')
+ax[1, 2].grid(True)
+ax[1, 2].legend()
+
+
+ax[2, 0].plot(data1[channelsimt],data1[Sim_Head_vx], label =datalabel1)
+ax[2, 0].plot(data2[channelsimt],data2[Sim_Head_vx], label =datalabel2)
+ax[2, 0].plot(data3[channelsimt],data3[Sim_Head_vx], label =datalabel3)
+ax[2, 0].plot(data4[channelsimt],data4[Sim_Head_vx], label =datalabel4)
+
+# ax[2, 0].plot(data[channelsimt],data['T1_vx'], label ='T1_vx', color = 'green')
+ax[2, 0].plot(average_df[channelt],average_df[Head_Vx_kph]*-1, label ='Head_Vx_kph', color = "red")
+ax[2, 0].plot(average_df[channelt],low[Head_Vx_kph]*-1,color = "lightpink")
+ax[2, 0].plot(average_df[channelt],high[Head_Vx_kph]*-1,color = "lightpink")
+
+ax[2, 0].plot(average_df[channelt],average_df['Spine_Vx_kph_38']*-1, label ='Spine_Vx_kph_38', color = "green")
+ax[2, 0].plot(average_df[channelt],low['Spine_Vx_kph_38']*-1,color = "lightgreen")
+ax[2, 0].plot(average_df[channelt],high['Spine_Vx_kph_38']*-1,color = "lightgreen")
+
+ax[2, 0].set_title('Head X Vel.')
+ax[2, 0].set_xlim(0, 0.25)
+ax[2, 0].set_xlabel('Time (s)')
+ax[2, 0].set_ylabel('Vx (kph)')
+ax[2, 0].grid(True)
+ax[2, 0].legend()
+
+ax[2, 1].plot(data1[channelsimt],data1[Sim_Head_vz], label =datalabel1)
+ax[2, 1].plot(data2[channelsimt],data2[Sim_Head_vz], label =datalabel2)
+ax[2, 1].plot(data3[channelsimt],data3[Sim_Head_vz], label =datalabel3)
+ax[2, 1].plot(data4[channelsimt],data4[Sim_Head_vz], label =datalabel4)
+
+ax[2, 1].plot(average_df[channelt],average_df[Head_Vz_kph], label ='Head_Vz_kph', color = "red")
+ax[2, 1].plot(average_df[channelt],low[Head_Vz_kph],color = "lightpink")
+ax[2, 1].plot(average_df[channelt],high[Head_Vz_kph],color = "lightpink")
+ax[2, 1].set_title('Head Z Vel.')
+ax[2, 1].set_xlim(0, 0.25)
+ax[2, 1].set_xlabel('Time (s)')
+ax[2, 1].set_ylabel('Vz (kph)')
+ax[2, 1].grid(True)
+ax[2, 1].legend()
+
+
+ax[2, 2].plot(data1[channelsimt],data1[Sim_Head_wy], label =datalabel1)
+ax[2, 2].plot(data2[channelsimt],data2[Sim_Head_wy], label =datalabel2)
+ax[2, 2].plot(data3[channelsimt],data3[Sim_Head_wy], label =datalabel3)
+ax[2, 2].plot(data4[channelsimt],data4[Sim_Head_wy], label =datalabel4)
+
+ax[2, 2].plot(data1[channelsimt],data1["T1_wy"], label =datalabel1,color = "green")
+# ax[2, 2].plot(data2[channelsimt],data2[T1_wy], label =datalabel2,color = "green")
+# ax[2, 2].plot(data3[channelsimt],data3[T1_wy], label =datalabel3,color = "green")
+# ax[2, 2].plot(data4[channelsimt],data4[T1_wy], label =datalabel4,color = "green")
+
+ax[2, 2].plot(average_df[channelt],average_df[Head_wy_rad_s], label ='Head_wy_rad_s', color = "red")
+ax[2, 2].plot(average_df[channelt],low[Head_wy_rad_s],color = "lightpink")
+ax[2, 2].plot(average_df[channelt],high[Head_wy_rad_s],color = "lightpink")
+ax[2, 2].set_title('Head Y Rot. Vel.')
+ax[2, 2].set_xlim(0, 0.25)
+ax[2, 2].set_xlabel('Time (s)')
+ax[2, 2].set_ylabel('wy (rad/s)')
+ax[2, 2].grid(True)
+ax[2, 2].legend()
+
+ax[3, 0].plot(data1[channelsimt],data1[channel_Head_aDx_G], label =datalabel1)
+ax[3, 0].plot(data2[channelsimt],data2[channel_Head_aDx_G], label =datalabel2)
+ax[3, 0].plot(data3[channelsimt],data3[channel_Head_aDx_G], label =datalabel3)
+ax[3, 0].plot(data4[channelsimt],data4[channel_Head_aDx_G], label =datalabel4)
+
+# ax[3, 0].plot(data[channelsimt],data['T1_aDx'], label ='T1_aDx', color = 'green')
+ax[3, 0].plot(average_df[channelt],average_df[Head_Ax_G_19], label =Head_Ax_G_19, color = "red")
+ax[3, 0].plot(average_df[channelt],low[Head_Ax_G_19],color = "lightpink")
+ax[3, 0].plot(average_df[channelt],high[Head_Ax_G_19],color = "lightpink")
+
+ax[3, 0].plot(average_df[channelt],average_df[Spine_Ax_G_47]*-1, label =Spine_Ax_G_47, color = "green")
+ax[3, 0].plot(average_df[channelt],low[Spine_Ax_G_47]*-1,color = "lightgreen")
+ax[3, 0].plot(average_df[channelt],high[Spine_Ax_G_47]*-1,color = "lightgreen")
+
+ax[3, 0].set_title('Head X Acc. (G)')
+ax[3, 0].set_xlim(0, 0.25)
+ax[3, 0].set_xlabel('Time (s)')
+ax[3, 0].set_ylabel('Ax (G)')
+ax[3, 0].grid(True)
+ax[3, 0].legend()
+
+ax[3, 1].plot(data1[channelsimt],data1[channel_Head_aDz_G], label =datalabel1)
+ax[3, 1].plot(data2[channelsimt],data2[channel_Head_aDz_G], label =datalabel2)
+ax[3, 1].plot(data3[channelsimt],data3[channel_Head_aDz_G], label =datalabel3)
+ax[3, 1].plot(data4[channelsimt],data4[channel_Head_aDz_G], label =datalabel4)
+
+ax[3, 1].plot(average_df[channelt],average_df[Head_Az_G_21], label =Head_Az_G_21, color = "red")
+ax[3, 1].plot(average_df[channelt],low[Head_Az_G_21],color = "lightpink")
+ax[3, 1].plot(average_df[channelt],high[Head_Az_G_21],color = "lightpink")
+ax[3, 1].set_title('Head Z Acc. (G)')
+ax[3, 1].set_xlim(0, 0.25)
+ax[3, 1].set_xlabel('Time (s)')
+ax[3, 1].set_ylabel('Az (G)')
+ax[3, 1].grid(True)
+ax[3, 1].legend()
+
+ax[3, 2].plot(data1[channelsimt],data1[channel_Head_aRy_rad_s_s], label =datalabel1)
+ax[3, 2].plot(data2[channelsimt],data2[channel_Head_aRy_rad_s_s], label =datalabel2)
+ax[3, 2].plot(data3[channelsimt],data3[channel_Head_aRy_rad_s_s], label =datalabel3)
+ax[3, 2].plot(data4[channelsimt],data4[channel_Head_aRy_rad_s_s], label =datalabel4)
+
+# ax[3, 2].plot(data[channelsimt],data['T1_aRy'], label ='T1_aRy',color = "green")
+ax[3, 2].plot(average_df[channelt],average_df[Head_ao_rad_s_s_23], label =Head_ao_rad_s_s_23, color = "red")
+ax[3, 2].plot(average_df[channelt],low[Head_ao_rad_s_s_23],color = "lightpink")
+ax[3, 2].plot(average_df[channelt],high[Head_ao_rad_s_s_23],color = "lightpink")
+ax[3, 2].set_title('Head Y Rot. Acc. (rad/s/s)')
+ax[3, 2].set_xlim(0, 0.25)
+ax[3, 2].set_ylim(-5000, 2500)
+ax[3, 2].set_xlabel('Time (s)')
+ax[3, 2].set_ylabel('Y Rot. Acc. (rad/s/s)')
+ax[3, 2].grid(True)
+ax[3, 2].legend()
+
+for item in ([ax[0,0].title, ax[0,0].xaxis.label, ax[0,0].yaxis.label] +
+             ax[0,0].get_xticklabels() + ax[0,0].get_yticklabels()):
+    item.set_fontsize(20)
+for item in ([ax[0,1].title, ax[0,1].xaxis.label, ax[0,1].yaxis.label] +
+             ax[0,1].get_xticklabels() + ax[0,1].get_yticklabels()):
+    item.set_fontsize(20)
+for item in ([ax[0,2].title, ax[0,2].xaxis.label, ax[0,2].yaxis.label] +
+             ax[0,2].get_xticklabels() + ax[0,2].get_yticklabels()):
+    item.set_fontsize(20)
+
+for item in ([ax[1,0].title, ax[1,0].xaxis.label, ax[1,0].yaxis.label] +
+             ax[1,0].get_xticklabels() + ax[1,0].get_yticklabels()):
+    item.set_fontsize(20)
+for item in ([ax[1,1].title, ax[1,1].xaxis.label, ax[1,1].yaxis.label] +
+             ax[1,1].get_xticklabels() + ax[1,1].get_yticklabels()):
+    item.set_fontsize(20)
+for item in ([ax[1,2].title, ax[1,2].xaxis.label, ax[1,2].yaxis.label] +
+             ax[1,2].get_xticklabels() + ax[1,2].get_yticklabels()):
+    item.set_fontsize(20)
+
+for item in ([ax[2,0].title, ax[2,0].xaxis.label, ax[2,0].yaxis.label] +
+             ax[2,0].get_xticklabels() + ax[2,0].get_yticklabels()):
+    item.set_fontsize(20)
+for item in ([ax[2,1].title, ax[2,1].xaxis.label, ax[2,1].yaxis.label] +
+             ax[2,1].get_xticklabels() + ax[2,1].get_yticklabels()):
+    item.set_fontsize(20)
+for item in ([ax[2,2].title, ax[2,2].xaxis.label, ax[2,2].yaxis.label] +
+             ax[2,2].get_xticklabels() + ax[2,2].get_yticklabels()):
+    item.set_fontsize(20)
+
+for item in ([ax[3,0].title, ax[3,0].xaxis.label, ax[3,0].yaxis.label] +
+             ax[3,0].get_xticklabels() + ax[3,0].get_yticklabels()):
+    item.set_fontsize(20)
+for item in ([ax[3,1].title, ax[3,1].xaxis.label, ax[3,1].yaxis.label] +
+             ax[3,1].get_xticklabels() + ax[3,1].get_yticklabels()):
+    item.set_fontsize(20)
+for item in ([ax[3,2].title, ax[3,2].xaxis.label, ax[3,2].yaxis.label] +
+             ax[3,2].get_xticklabels() + ax[3,2].get_yticklabels()):
+    item.set_fontsize(20)
+plt.tight_layout()
+
+# plt.subplots_adjust(left = 0.17, bottom = 0.13)
+plt.savefig('Simulation Results Summary.png')
+plt.show()
+
+
+
+# #########################################################################################
+
+# figure, ax = plt.subplots(4, 3,figsize=(40,30))
+# plt.rcParams['font.size'] = '20'
+# # fig = plt.figure(figsize=(16,16))
+# ax[0, 0].plot(data[channelsimt],data[Sim_Rel_Head_Dx], label =Sim_Rel_Head_Dx)
+#
+# ax[0, 0].plot(average_df_int[channelt],average_df_int[Rel_Head_Dx], label ='Rel_Head_Dx', color = "red")
+# ax[0, 0].plot(average_df_int[channelt],low_int[Rel_Head_Dx], color = "lightpink")
+# ax[0, 0].plot(average_df_int[channelt],high_int[Rel_Head_Dx], color = "lightpink")
+#
+#
+# ax[0, 0].set_title('Rel. Head X Disp.')
+# ax[0, 0].set_xlim(0, 0.25)
+# ax[0, 0].set_xlabel('Time (s)')
+# ax[0, 0].set_ylabel('Dx (mm)')
+# ax[0, 0].grid(True)
+# ax[0, 0].legend()
+#
+#
+# ax[1, 0].plot(data[channelsimt],data[Sim_Head_Dx], label =Sim_Head_Dx)
+#
+# ax[1, 0].plot(average_df_int[channelt],average_df_int['Spine_Dx_mm_int_47']*-1, label ='Spine_Dx_mm_int_47', color = "green")
+# ax[1, 0].plot(average_df_int[channelt],low_int['Spine_Dx_mm_int_47']*-1,color = "lightgreen")
+# ax[1, 0].plot(average_df_int[channelt],high_int['Spine_Dx_mm_int_47']*-1,color = "lightgreen")
+#
+# ax[1, 0].plot(average_df_int[channelt],average_df_int['Head_Dx_mm_int_19']*-1, label ='Head_Dx_mm_int_19', color = "red")
+# ax[1, 0].plot(average_df_int[channelt],low_int['Head_Dx_mm_int_19']*-1,color = "lightpink")
+# ax[1, 0].plot(average_df_int[channelt],high_int['Head_Dx_mm_int_19']*-1,color = "lightpink")
+#
+# ax[1, 0].set_title('Head X Disp.')
+# ax[1, 0].set_xlim(0, 0.25)
+# ax[1, 0].set_xlabel('Time (s)')
+# ax[1, 0].set_ylabel('Dx (mm)')
+# ax[1, 0].grid(True)
+# ax[1, 0].legend()
+#
+# ax[0, 1].plot(data[channelsimt],data[Sim_Rel_Head_Dz], label =Sim_Rel_Head_Dz)
+#
+# ax[0, 1].plot(average_df_int[channelt],average_df_int['Head_Dz_mm_int_21'], label ='Head_Dz_mm_int_21', color = "red")
+# ax[0, 1].plot(average_df_int[channelt],low_int['Head_Dz_mm_int_21'],color = "lightpink")
+# ax[0, 1].plot(average_df_int[channelt],high_int['Head_Dz_mm_int_21'],color = "lightpink")
+#
+# ax[0, 1].set_title('Rel. Head Z Disp.')
+# ax[0, 1].set_xlim(0, 0.25)
+# ax[0, 1].set_xlabel('Time (s)')
+# ax[0, 1].set_ylabel('Dz (mm)')
+# ax[0, 1].grid(True)
+# ax[0, 1].legend()
+#
+#
+# ax[1, 1].plot(data[channelsimt],data[Sim_Rel_Head_Dz], label =Sim_Rel_Head_Dz)
+#
+# ax[1, 1].plot(average_df_int[channelt],average_df_int['Head_Dz_mm_int_21'], label ='Head_Dz_mm_int_21', color = "red")
+# ax[1, 1].plot(average_df_int[channelt],low_int['Head_Dz_mm_int_21'],color = "lightpink")
+# ax[1, 1].plot(average_df_int[channelt],high_int['Head_Dz_mm_int_21'],color = "lightpink")
+#
+# ax[1, 1].set_title('Head Z Disp. (+Rel.)')
+# ax[1, 1].set_xlim(0, 0.25)
+# ax[1, 1].set_xlabel('Time (s)')
+# ax[1, 1].set_ylabel('Dz (mm)')
+# ax[1, 1].grid(True)
+# ax[1, 1].legend()
+#
+# ax[0, 2].plot(data[channelsimt],data['Sim_Rel_Head_Ry'], label ='Sim_Rel_Head_Ry')
+#
+# ax[0, 2].set_title('Rel. Head Y Rot.')
+# ax[0, 2].set_xlim(0, 0.25)
+# ax[0, 2].set_xlabel('Time (s)')
+# ax[0, 2].set_ylabel('Ry (deg)')
+# ax[0, 2].grid(True)
+# ax[0, 2].legend()
+#
+# ax[1, 2].plot(data[channelsimt],data[Sim_Head_Ry]*-1, label =Sim_Head_Ry)
+# ax[1, 2].plot(average_df_int_rot[channelt],average_df_int_rot[Head_ao_deg_23], label ='Head_ao_deg_23', color = "red")
+# ax[1, 2].plot(average_df_int_rot[channelt],low_int_rot[Head_ao_deg_23],color = "lightpink")
+# ax[1, 2].plot(average_df_int_rot[channelt],high_int_rot[Head_ao_deg_23],color = "lightpink")
+#
+# ax[1, 2].plot(Spine_Ry_Thunnissen[channelt],Spine_Ry_Thunnissen['Ry_Average'], label ='Spine_Ry_Thunnissen', color = "green")
+#
+# ax[1, 2].set_title('Head Y Rot.')
+# ax[1, 2].set_xlim(0, 0.25)
+# ax[1, 2].set_xlabel('Time (s)')
+# ax[1, 2].set_ylabel('Ry (deg)')
+# ax[1, 2].grid(True)
+# ax[1, 2].legend()
+#
+#
+# ax[2, 0].plot(data[channelsimt],data[Sim_Head_vx], label ='Sim_Head_vx')
+# # ax[2, 0].plot(data[channelsimt],data['T1_vx'], label ='T1_vx', color = 'green')
+# ax[2, 0].plot(average_df[channelt],average_df[Head_Vx_kph]*-1, label ='Head_Vx_kph', color = "red")
+# ax[2, 0].plot(average_df[channelt],low[Head_Vx_kph]*-1,color = "lightpink")
+# ax[2, 0].plot(average_df[channelt],high[Head_Vx_kph]*-1,color = "lightpink")
+#
+# ax[2, 0].plot(average_df[channelt],average_df['Spine_Vx_kph_38']*-1, label ='Spine_Vx_kph_38', color = "green")
+# ax[2, 0].plot(average_df[channelt],low['Spine_Vx_kph_38']*-1,color = "lightgreen")
+# ax[2, 0].plot(average_df[channelt],high['Spine_Vx_kph_38']*-1,color = "lightgreen")
+#
+# ax[2, 0].set_title('Head X Vel.')
+# ax[2, 0].set_xlim(0, 0.25)
+# ax[2, 0].set_xlabel('Time (s)')
+# ax[2, 0].set_ylabel('Vx (kph)')
+# ax[2, 0].grid(True)
+# ax[2, 0].legend()
+#
+# ax[2, 1].plot(data[channelsimt],data[Sim_Head_vz], label ='Sim_Head_vz')
+# ax[2, 1].plot(average_df[channelt],average_df[Head_Vz_kph], label ='Head_Vz_kph', color = "red")
+# ax[2, 1].plot(average_df[channelt],low[Head_Vz_kph],color = "lightpink")
+# ax[2, 1].plot(average_df[channelt],high[Head_Vz_kph],color = "lightpink")
+# ax[2, 1].set_title('Head Z Vel.')
+# ax[2, 1].set_xlim(0, 0.25)
+# ax[2, 1].set_xlabel('Time (s)')
+# ax[2, 1].set_ylabel('Vz (kph)')
+# ax[2, 1].grid(True)
+# ax[2, 1].legend()
+#
+# ax[2, 2].plot(data[channelsimt],data[Sim_Head_wy], label ='Sim_Head_wy')
+#
+# ax[2, 2].plot(data[channelsimt],data['T1_wy'], label ='T1_wy',color = "green")
+# ax[2, 2].plot(average_df[channelt],average_df[Head_wy_rad_s], label ='Head_wy_rad_s', color = "red")
+# ax[2, 2].plot(average_df[channelt],low[Head_wy_rad_s],color = "lightpink")
+# ax[2, 2].plot(average_df[channelt],high[Head_wy_rad_s],color = "lightpink")
+# ax[2, 2].set_title('Head Y Rot. Vel.')
+# ax[2, 2].set_xlim(0, 0.25)
+# ax[2, 2].set_xlabel('Time (s)')
+# ax[2, 2].set_ylabel('wy (rad/s)')
+# ax[2, 2].grid(True)
+# ax[2, 2].legend()
+#
+# ax[3, 0].plot(data[channelsimt],data[channel_Head_aDx_G], label ='Sim_Head_aDx_G')
+# # ax[3, 0].plot(data[channelsimt],data['T1_aDx'], label ='T1_aDx', color = 'green')
+# ax[3, 0].plot(average_df[channelt],average_df[Head_Ax_G_19], label =Head_Ax_G_19, color = "red")
+# ax[3, 0].plot(average_df[channelt],low[Head_Ax_G_19],color = "lightpink")
+# ax[3, 0].plot(average_df[channelt],high[Head_Ax_G_19],color = "lightpink")
+#
+# ax[3, 0].plot(average_df[channelt],average_df[Spine_Ax_G_47]*-1, label =Spine_Ax_G_47, color = "green")
+# ax[3, 0].plot(average_df[channelt],low[Spine_Ax_G_47]*-1,color = "lightgreen")
+# ax[3, 0].plot(average_df[channelt],high[Spine_Ax_G_47]*-1,color = "lightgreen")
+#
+# ax[3, 0].set_title('Head X Acc. (G)')
+# ax[3, 0].set_xlim(0, 0.25)
+# ax[3, 0].set_xlabel('Time (s)')
+# ax[3, 0].set_ylabel('Ax (G)')
+# ax[3, 0].grid(True)
+# ax[3, 0].legend()
+#
+# ax[3, 1].plot(data[channelsimt],data[channel_Head_aDz_G], label ='Sim_Head_aDz_G')
+# ax[3, 1].plot(average_df[channelt],average_df[Head_Az_G_21], label =Head_Az_G_21, color = "red")
+# ax[3, 1].plot(average_df[channelt],low[Head_Az_G_21],color = "lightpink")
+# ax[3, 1].plot(average_df[channelt],high[Head_Az_G_21],color = "lightpink")
+# ax[3, 1].set_title('Head Z Acc. (G)')
+# ax[3, 1].set_xlim(0, 0.25)
+# ax[3, 1].set_xlabel('Time (s)')
+# ax[3, 1].set_ylabel('Az (G)')
+# ax[3, 1].grid(True)
+# ax[3, 1].legend()
+#
+# ax[3, 2].plot(data[channelsimt],data[channel_Head_aRy_rad_s_s], label ='Sim_Head_aRy')
+#
+# # ax[3, 2].plot(data[channelsimt],data['T1_aRy'], label ='T1_aRy',color = "green")
+# ax[3, 2].plot(average_df[channelt],average_df[Head_ao_rad_s_s_23], label =Head_ao_rad_s_s_23, color = "red")
+# ax[3, 2].plot(average_df[channelt],low[Head_ao_rad_s_s_23],color = "lightpink")
+# ax[3, 2].plot(average_df[channelt],high[Head_ao_rad_s_s_23],color = "lightpink")
+# ax[3, 2].set_title('Head Y Rot. Acc. (rad/s/s)')
+# ax[3, 2].set_xlim(0, 0.25)
+# ax[3, 2].set_xlabel('Time (s)')
+# ax[3, 2].set_ylabel('Y Rot. Acc. (rad/s/s)')
+# ax[3, 2].grid(True)
+# ax[3, 2].legend()
+#
+# for item in ([ax[0,0].title, ax[0,0].xaxis.label, ax[0,0].yaxis.label] +
+#              ax[0,0].get_xticklabels() + ax[0,0].get_yticklabels()):
+#     item.set_fontsize(20)
+# for item in ([ax[0,1].title, ax[0,1].xaxis.label, ax[0,1].yaxis.label] +
+#              ax[0,1].get_xticklabels() + ax[0,1].get_yticklabels()):
+#     item.set_fontsize(20)
+# for item in ([ax[0,2].title, ax[0,2].xaxis.label, ax[0,2].yaxis.label] +
+#              ax[0,2].get_xticklabels() + ax[0,2].get_yticklabels()):
+#     item.set_fontsize(20)
+#
+# for item in ([ax[1,0].title, ax[1,0].xaxis.label, ax[1,0].yaxis.label] +
+#              ax[1,0].get_xticklabels() + ax[1,0].get_yticklabels()):
+#     item.set_fontsize(20)
+# for item in ([ax[1,1].title, ax[1,1].xaxis.label, ax[1,1].yaxis.label] +
+#              ax[1,1].get_xticklabels() + ax[1,1].get_yticklabels()):
+#     item.set_fontsize(20)
+# for item in ([ax[1,2].title, ax[1,2].xaxis.label, ax[1,2].yaxis.label] +
+#              ax[1,2].get_xticklabels() + ax[1,2].get_yticklabels()):
+#     item.set_fontsize(20)
+#
+# for item in ([ax[2,0].title, ax[2,0].xaxis.label, ax[2,0].yaxis.label] +
+#              ax[2,0].get_xticklabels() + ax[2,0].get_yticklabels()):
+#     item.set_fontsize(20)
+# for item in ([ax[2,1].title, ax[2,1].xaxis.label, ax[2,1].yaxis.label] +
+#              ax[2,1].get_xticklabels() + ax[2,1].get_yticklabels()):
+#     item.set_fontsize(20)
+# for item in ([ax[2,2].title, ax[2,2].xaxis.label, ax[2,2].yaxis.label] +
+#              ax[2,2].get_xticklabels() + ax[2,2].get_yticklabels()):
+#     item.set_fontsize(20)
+#
+# for item in ([ax[3,0].title, ax[3,0].xaxis.label, ax[3,0].yaxis.label] +
+#              ax[3,0].get_xticklabels() + ax[3,0].get_yticklabels()):
+#     item.set_fontsize(20)
+# for item in ([ax[3,1].title, ax[3,1].xaxis.label, ax[3,1].yaxis.label] +
+#              ax[3,1].get_xticklabels() + ax[3,1].get_yticklabels()):
+#     item.set_fontsize(20)
+# for item in ([ax[3,2].title, ax[3,2].xaxis.label, ax[3,2].yaxis.label] +
+#              ax[3,2].get_xticklabels() + ax[3,2].get_yticklabels()):
+#     item.set_fontsize(20)
+# plt.tight_layout()
+#
+# # plt.subplots_adjust(left = 0.17, bottom = 0.13)
+# plt.savefig('Simulation Results Summary - No Limits.png')
+# plt.show()
+
+print("complete")
