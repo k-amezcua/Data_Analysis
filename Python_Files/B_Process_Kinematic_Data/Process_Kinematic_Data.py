@@ -3,17 +3,9 @@ import re
 import pandas as pd
 from B_Process_Kinematic_Data.Plot_Kinematic_Data import plot_kinematic_data
 
-def process_kinematics(simulation,
-                        average_data, low_data, high_data,
-                         average_panzer_x_df, average_panzer_y_df, average_panzer_z_df,
-                         Spine_Ry_Thunnissen):
+def process_kinematic_data(simulation, kin_file_path, average_data, low_data, high_data, panzer_data, thunn_data):
 
-    print(f"Processing kinematic data for: {simulation.label} ----------------------------------------------------------------")
-
-    os.chdir(simulation.kin_dir_path)
-    sim_results_file = simulation.kin_txt_file_path
-
-    with open(sim_results_file) as data:
+    with open(kin_file_path) as data:
         lines = data.readlines()
 
     Head_Dx_tracker = []
@@ -136,13 +128,9 @@ def process_kinematics(simulation,
     data['Sim_Rel_Head_Dz'] = data['Head_Dz']
     data['Sim_Rel_Head_Ry'] = (data['Head_Ry'] - data['T1_Ry'])
 
-    save_sim_results_file = os.path.join(simulation.kin_csv_file_path)
-    data.to_csv(save_sim_results_file)
+    csv_path = os.path.splitext(kin_file_path)[0] + ".csv"
+    data.to_csv(csv_path)
 
-    plot_kinematic_data(data,
-                        average_data, low_data, high_data,
-                        average_panzer_x_df, average_panzer_y_df, average_panzer_z_df,
-                        Spine_Ry_Thunnissen)
+    plot_kinematic_data(data, average_data, low_data, high_data, panzer_data, thunn_data)
 
-    pass
-
+    return

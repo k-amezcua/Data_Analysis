@@ -1,8 +1,5 @@
 
-def plot_kinematic_data(data,
-                        average_data, low_data, high_data,
-                        average_panzer_x_df, average_panzer_y_df, average_panzer_z_df,
-                        Spine_Ry_Thunnissen):
+def plot_kinematic_data(data, average_data, low_data, high_data, panzer_data, thunn_data):
 
     import matplotlib.pyplot as plt
 
@@ -150,7 +147,7 @@ def plot_kinematic_data(data,
     # mpl.use('TkAgg')  # or can use 'TkAgg' or Qt5Agg, whatever you have/prefer
     fig ,ax = plt.subplots()
     ax.plot(data[channelsimt] ,data[channel_Head_aDx_G], label =channel_Head_aDx_G)
-    ax.plot(average_panzer_x_df["x" ] /1000 ,average_panzer_x_df["Passive X Accel" ] *-1, label ="Panzer Head X Accel.")
+    ax.plot(panzer_data["x" ] /1000 ,panzer_data["Passive X Accel" ] *-1, label ="Panzer Head X Accel.")
     # ax.plot(average_data[channelt],data[channel_Head_Ry_deg], label =channel_Head_Ry_deg)
 
     # ax.plot(average_data[channelt],average_data[Head_Ax_G_19], label =Head_Ax_G_19, color = "red")
@@ -205,7 +202,7 @@ def plot_kinematic_data(data,
     # mpl.use('TkAgg')  # or can use 'TkAgg' or Qt5Agg, whatever you have/prefer
     fig ,ax = plt.subplots()
     ax.plot(data[channelsimt] ,data[channel_Head_aDz_G], label =channel_Head_aDz_G)
-    ax.plot(average_panzer_z_df["x" ] /1000 ,average_panzer_z_df["Passive Z Accel"], label ="Panzer Head Z Accel.")
+    ax.plot(panzer_data["x" ] /1000 ,panzer_data["Passive Z Accel"], label ="Panzer Head Z Accel.")
     # ax.plot(average_data[channelt],data[channel_Head_Ry_deg], label =channel_Head_Ry_deg)
 
     # ax.plot(average_data[channelt],average_data[Head_Az_G_21], label =Head_Az_G_21, color = "red")
@@ -262,7 +259,7 @@ def plot_kinematic_data(data,
     fig ,ax = plt.subplots()
     # ax.plot(average_data[channelt],data[channel_Head_Dx_mm], label =channel_Head_Dx_mm)
     ax.plot(data[channelsimt] ,data[channel_Head_aRy_rad_s_s], label =channel_Head_aRy_rad_s_s)
-    ax.plot(average_panzer_y_df["x" ] /1000 ,average_panzer_y_df["Passive Y Rot. Accel"], label ="Panzer Head Y Rot Accel.")
+    ax.plot(panzer_data["x" ] /1000 ,panzer_data["Passive Y Rot. Accel"], label ="Panzer Head Y Rot Accel.")
 
     # ax.plot(average_data[channelt],average_data[Head_ao_rad_s_s_23], label =Head_ao_rad_s_s_23, color = "red")
     # ax.plot(average_data[channelt],low_data[Head_ao_rad_s_s_23],color = "lightpink")
@@ -283,7 +280,7 @@ def plot_kinematic_data(data,
     fig ,ax = plt.subplots()
     # ax.plot(average_data[channelt],data[channel_Head_Dx_mm], label =channel_Head_Dx_mm)
     ax.plot(data[channelsimt] ,data[channel_Head_aRy_rad_s_s], label =channel_Head_aRy_rad_s_s)
-    ax.plot(average_panzer_y_df["x" ] /1000 ,average_panzer_y_df["Passive Y Rot. Accel"], label ="Panzer Head Y Rot Accel.")
+    ax.plot(panzer_data["x" ] /1000 ,panzer_data["Passive Y Rot. Accel"], label ="Panzer Head Y Rot Accel.")
 
     # ax.plot(average_data[channelt],average_data[Head_ao_rad_s_s_23], label =Head_ao_rad_s_s_23, color = "red")
     # ax.plot(average_data[channelt],low_data[Head_ao_rad_s_s_23],color = "lightpink")
@@ -463,7 +460,5 @@ def plot_kinematic_data(data,
     plt.tight_layout()
     plt.savefig('Simulation Results Summary - No Limits.png')
     plt.close()
-
-    print("(processed)\n")
 
     return
