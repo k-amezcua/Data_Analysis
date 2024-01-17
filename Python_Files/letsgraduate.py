@@ -74,7 +74,7 @@ for sim in simulations:
     #
     print(f"Processing Muscle Data for: {sim.label}\n")
     sim.process_muscles()
-    plot_muscle_data_summary(sim)
+    # plot_muscle_data_summary(sim)
     print("\n(completed)\n")
     #
     # print(f"Processing NIJ Data for: {sim.label}\n")
@@ -86,6 +86,7 @@ from G_Analyze_Parametric_Results.Compare_Kinematics import compare_kinematic_da
 from G_Analyze_Parametric_Results.Compare_Vertebral_Data import compare_vertebral_data
 from G_Analyze_Parametric_Results.Compare_Disc_Data import compare_disc_data
 from G_Analyze_Parametric_Results.Compare_Ligament_Data import compare_ligament_data
+from G_Analyze_Parametric_Results.Compare_Muscle_Data import compare_muscle_data
 os.chdir(compare_dir_path)
 
 # print(f"Comparing Kinematic Data")
@@ -105,6 +106,11 @@ os.chdir(compare_dir_path)
 # for level in ['C01_C02_C12', 'C23', 'C34', 'C45', 'C56', 'C67', 'C7T1']:  # Add other levels as needed
 #     compare_ligament_data(simulations, level)
 # print("\n(completed)\n")
+
+print(f"Comparing Muscle Data")
+# Call the function in your main script
+compare_muscle_data(simulations)
+print("\n(completed)\n")
 
 
 
