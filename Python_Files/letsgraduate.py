@@ -66,16 +66,16 @@ for sim in simulations:
     # plot_disc_data_summary(grouped_discs, 'strain')
     # print("(completed)\n")
     #
-    print(f"Processing Ligament Data for: {sim.label}\n")
-    sim.process_ligaments()
-    sim.grouped_ligaments = sim.group_ligaments_by_level()
-    # plot_ligament_data_summary(sim)
-    print("\n(completed)\n")
-    #
-    # print(f"Processing Muscle Data for: {sim.label}\n")
-    # sim.process_muscles()
-    # # plot_muscle_data_summary(sim)
+    # print(f"Processing Ligament Data for: {sim.label}\n")
+    # sim.process_ligaments()
+    # sim.grouped_ligaments = sim.group_ligaments_by_level()
+    # # plot_ligament_data_summary(sim)
     # print("\n(completed)\n")
+    #
+    print(f"Processing Muscle Data for: {sim.label}\n")
+    sim.process_muscles()
+    plot_muscle_data_summary(sim)
+    print("\n(completed)\n")
     #
     # print(f"Processing NIJ Data for: {sim.label}\n")
     # sim.process_NIJ()
@@ -100,11 +100,11 @@ os.chdir(compare_dir_path)
 # compare_disc_data(simulations)
 # print("\n(completed)\n")
 
-print(f"Comparing Disc Data")
-# Call the function in your main script
-for level in ['C01_C02_C12', 'C23', 'C34', 'C45', 'C56', 'C67', 'C7T1']:  # Add other levels as needed
-    compare_ligament_data(simulations, level)
-print("\n(completed)\n")
+# print(f"Comparing Ligament Data")
+# # Call the function in your main script
+# for level in ['C01_C02_C12', 'C23', 'C34', 'C45', 'C56', 'C67', 'C7T1']:  # Add other levels as needed
+#     compare_ligament_data(simulations, level)
+# print("\n(completed)\n")
 
 
 

@@ -88,9 +88,10 @@ class Simulation:
         muscles = []
         for musc_dict in muscle_dict_list:
             musc_name = musc_dict['muscle_name']
+            musc_group = musc_dict['muscle_group']
             musc_file_path = os.path.join(musc_dir_path, musc_name + '_results.txt')
             num_elements = musc_dict['muscle_elements']
-            muscles.append(Muscle(musc_name, num_elements, musc_file_path))
+            muscles.append(Muscle(musc_name, musc_group, num_elements, musc_file_path))
         return muscles
 
     def process_discs(self):
