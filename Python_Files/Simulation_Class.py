@@ -102,9 +102,16 @@ class Simulation:
         grouped = {}
         for lig in self.ligaments:
             level = lig.name.split('_')[0]
-            if level not in grouped:
-                grouped[level] = []
-            grouped[level].append(lig)
+            # Special handling for C01, C02, and C12
+            if level in ['C01', 'C02', 'C12']:
+                combined_level = 'C01_C02_C12'
+                if combined_level not in grouped:
+                    grouped[combined_level] = []
+                grouped[combined_level].append(lig)
+            else:
+                if level not in grouped:
+                    grouped[level] = []
+                grouped[level].append(lig)
         return grouped
 
     def group_discs_by_level(self):

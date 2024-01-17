@@ -128,16 +128,11 @@ def plot_level_data(level, ligaments):
 def plot_ligament_data_summary(simulation):
     grouped_ligaments = simulation.group_ligaments_by_level()
 
-    # Aggregate ligaments from C01, C02, and C12
-    ligaments_to_plot = []
-    for level in ['C01', 'C02', 'C12']:
-        if level in grouped_ligaments:
-            ligaments_to_plot.extend(grouped_ligaments[level])
-            # Plot the aggregated ligaments
-            plot_ligaments("C01_C02_C12", ligaments_to_plot)
-
-    # Plot other levels
+    # Plot data for each level, including the aggregated 'C01_C02_C12'
     for level, ligaments in grouped_ligaments.items():
-        if level not in ['C01', 'C02', 'C12']:
+        if level == 'C01_C02_C12':
+            plot_ligaments(level, ligaments)
+        else:
             plot_level_data(level, ligaments)
+
 
