@@ -68,6 +68,7 @@ class Simulation:
         discs = []
         for disc_dict in disc_dict_list:
             disc_name = disc_dict['disc_name']
+            disc_level = disc_dict['disc_level']
             disc_file_path = os.path.join(disc_dir_path, disc_name + '_results.txt')
             num_elements = disc_dict['disc_elements']
             disc_variables = disc_dict['disc_variables']
@@ -96,7 +97,6 @@ class Simulation:
         os.chdir(self.disc_dir_path)
         for disc in self.discs:
             disc.process_disc_data()
-            disc.plot_disc_data()
 
     def group_ligaments_by_level(self):
         grouped = {}
@@ -105,6 +105,15 @@ class Simulation:
             if level not in grouped:
                 grouped[level] = []
             grouped[level].append(lig)
+        return grouped
+
+    def group_discs_by_level(self):
+        grouped = {}
+        for disc in self.discs:
+            level = disc.name.split('_')[0]
+            if level not in grouped:
+                grouped[level] = []
+            grouped[level].append(disc)
         return grouped
 
     def process_ligaments(self):

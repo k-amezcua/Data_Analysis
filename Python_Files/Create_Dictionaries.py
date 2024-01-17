@@ -24,6 +24,9 @@ def create_dictionaries():
     ]
 
     for disc_dict in disc_dict_list:
+        disc_name = disc_dict['disc_name']
+        disc_level = disc_name.split('_')[0]  # Assuming the level is the part before the first '_'
+        disc_dict['disc_level'] = disc_level
         disc_dict['disc_variables'] = disc_variables
 
     # Define ligament information

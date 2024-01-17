@@ -1,5 +1,4 @@
 import os
-from C_Process_Disc_Data.Plot_Disc_Data import plot_data
 
 class Disc:
     def __init__(self, name, num_elements, file_path, disc_variables):
@@ -199,6 +198,3 @@ class Disc:
             # plot_data(self)
 
         pass
-
-    def plot_disc_data(self):
-        plot_data(self)
