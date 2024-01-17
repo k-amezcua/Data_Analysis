@@ -1,14 +1,14 @@
-def compare_kinematics(compare_save_path, sim_list,
-             average_data, low_data, high_data,
-             average_panzer_x_df, average_panzer_y_df, average_panzer_z_df):
+def compare_kinematic_data(sim_list, exp_kinematic_data):
 
-    import os
-    import pandas as pd
     import matplotlib.pyplot as plt
 
-    print('comparing kinematics')
-
-    os.chdir(compare_save_path)
+    average_data = exp_kinematic_data['NBDL_average']
+    low_data = exp_kinematic_data['NBDL_STDEV-1']
+    high_data = exp_kinematic_data['NBDL_STDEV+1']
+    average_panzer_x_df = exp_kinematic_data['panzer_kinematic_data']['average_panzer_x_df']
+    average_panzer_y_df = exp_kinematic_data['panzer_kinematic_data']['average_panzer_y_df']
+    average_panzer_z_df = exp_kinematic_data['panzer_kinematic_data']['average_panzer_z_df']
+    thunn_data = exp_kinematic_data['thunn_data']
 
     ###Variables###
     channelsimt = 'Sim_Time_s'
@@ -59,10 +59,9 @@ def compare_kinematics(compare_save_path, sim_list,
     #########################################################
 
     # Plotting loop
-
     fig, ax = plt.subplots()
     for sim in sim_list:
-        ax.plot(sim.kin_data[channelsimt], sim.kin_data[channel_Head_Dx_mm], label=sim.label)
+        ax.plot(sim.kinematics[channelsimt], sim.kinematics[channel_Head_Dx_mm], label=sim.label)
         # Add more plots or customizations as needed
     ax.set_xlim(0, 0.25)
     ax.set_xlabel('Time (s)')
@@ -77,7 +76,7 @@ def compare_kinematics(compare_save_path, sim_list,
     # Plotting loop for Head Z Displacement
     fig, ax = plt.subplots()
     for sim in sim_list:
-        ax.plot(sim.kin_data[channelsimt], sim.kin_data[channel_Head_Dz_mm], label=sim.label)
+        ax.plot(sim.kinematics[channelsimt], sim.kinematics[channel_Head_Dz_mm], label=sim.label)
     ax.set_xlim(0, 0.25)
     ax.set_xlabel('Time (s)')
     ax.set_ylabel('Dz (mm)')
@@ -91,7 +90,7 @@ def compare_kinematics(compare_save_path, sim_list,
     # Plotting loop for Head Y Rotation
     fig, ax = plt.subplots()
     for sim in sim_list:
-        ax.plot(sim.kin_data[channelsimt], sim.kin_data[channel_Head_Ry_deg], label=sim.label)
+        ax.plot(sim.kinematics[channelsimt], sim.kinematics[channel_Head_Ry_deg], label=sim.label)
     ax.set_xlim(0, 0.25)
     ax.set_xlabel('Time (s)')
     ax.set_ylabel('Ry (deg)')
@@ -105,7 +104,7 @@ def compare_kinematics(compare_save_path, sim_list,
     # Plotting loop for Head X Acceleration G
     fig, ax = plt.subplots()
     for sim in sim_list:
-        ax.plot(sim.kin_data[channelsimt], sim.kin_data[channel_Head_aDx_G], label=sim.label)
+        ax.plot(sim.kinematics[channelsimt], sim.kinematics[channel_Head_aDx_G], label=sim.label)
     ax.set_xlim(0, 0.25)
     ax.set_xlabel('Time (s)')
     ax.set_ylabel('Ax (G)')
@@ -119,10 +118,10 @@ def compare_kinematics(compare_save_path, sim_list,
     # Plotting loop for Compare Results - Head X Acceleration G
     fig, ax = plt.subplots()
     for sim in sim_list:
-        ax.plot(sim.kin_data[channelsimt], sim.kin_data[channel_Head_aDx_G], label=sim.label)
-        ax.plot(average_data[channelt], average_data[Head_Ax_G_19], label=Head_Ax_G_19, color="red")
-        ax.plot(average_data[channelt], low_data[Head_Ax_G_19], color="lightpink")
-        ax.plot(average_data[channelt], high_data[Head_Ax_G_19], color="lightpink")
+        ax.plot(sim.kinematics[channelsimt], sim.kinematics[channel_Head_aDx_G], label=sim.label)
+    ax.plot(average_data[channelt], average_data[Head_Ax_G_19], label=Head_Ax_G_19, color="red")
+    ax.plot(average_data[channelt], low_data[Head_Ax_G_19], color="lightpink")
+    ax.plot(average_data[channelt], high_data[Head_Ax_G_19], color="lightpink")
 
     ax.set_xlim(0, 0.25)
     ax.set_xlabel('Time (s)')
@@ -137,7 +136,7 @@ def compare_kinematics(compare_save_path, sim_list,
     # Plotting loop for Simulation Results - Head X Acceleration G
     fig, ax = plt.subplots()
     for sim in sim_list:
-        ax.plot(sim.kin_data[channelsimt], sim.kin_data[channel_Head_aDx_G], label=sim.label)
+        ax.plot(sim.kinematics[channelsimt], sim.kinematics[channel_Head_aDx_G], label=sim.label)
 
     ax.set_xlim(0, 0.25)
     ax.set_xlabel('Time (s)')
@@ -153,7 +152,7 @@ def compare_kinematics(compare_save_path, sim_list,
     fig, ax = plt.subplots()
     for sim in sim_list:
         if sim.label == 'passive':
-            ax.plot(sim.kin_data[channelsimt], sim.kin_data[channel_Head_aDx_G], label=sim.label)
+            ax.plot(sim.kinematics[channelsimt], sim.kinematics[channel_Head_aDx_G], label=sim.label)
     ax.plot(average_panzer_x_df["x"]/1000, average_panzer_x_df["Passive X Accel"]*-1, label="Panzer Head X Accel.")
 
     ax.set_xlim(0, 0.25)
@@ -169,7 +168,7 @@ def compare_kinematics(compare_save_path, sim_list,
     # Plotting loop for Simulation Results - Head Z Acceleration G
     fig, ax = plt.subplots()
     for sim in sim_list:
-        ax.plot(sim.kin_data[channelsimt], sim.kin_data[channel_Head_aDz_G], label=sim.label)
+        ax.plot(sim.kinematics[channelsimt], sim.kinematics[channel_Head_aDz_G], label=sim.label)
 
     ax.set_xlim(0, 0.25)
     ax.set_xlabel('Time (s)')
@@ -184,7 +183,7 @@ def compare_kinematics(compare_save_path, sim_list,
     # Plotting loop for Compare Results - Head Z Acceleration G
     fig, ax = plt.subplots()
     for sim in sim_list:
-        ax.plot(sim.kin_data[channelsimt], sim.kin_data[channel_Head_aDz_G], label=sim.label)
+        ax.plot(sim.kinematics[channelsimt], sim.kinematics[channel_Head_aDz_G], label=sim.label)
 
     ax.plot(average_data[channelt], average_data[Head_Az_G_21], label=Head_Az_G_21, color="red")
     ax.plot(average_data[channelt], low_data[Head_Az_G_21], color="lightpink")
@@ -205,7 +204,7 @@ def compare_kinematics(compare_save_path, sim_list,
     fig, ax = plt.subplots()
     for sim in sim_list:
         if sim.label == 'passive':
-            ax.plot(sim.kin_data[channelsimt], sim.kin_data[channel_Head_aDz_G], label=sim.label)
+            ax.plot(sim.kinematics[channelsimt], sim.kinematics[channel_Head_aDz_G], label=sim.label)
     ax.plot(average_panzer_z_df["x"]/1000, average_panzer_z_df["Passive Z Accel"], label="Panzer Head Z Accel.")
 
     ax.set_xlim(0, 0.25)
@@ -222,7 +221,7 @@ def compare_kinematics(compare_save_path, sim_list,
     # Plotting loop for Head Y Rotation Acceleration (rad/s/s)
     fig, ax = plt.subplots()
     for sim in sim_list:
-        ax.plot(sim.kin_data[channelsimt], sim.kin_data[channel_Head_aRy_rad_s_s], label=sim.label)
+        ax.plot(sim.kinematics[channelsimt], sim.kinematics[channel_Head_aRy_rad_s_s], label=sim.label)
 
     ax.set_xlim(0, 0.25)
     ax.set_xlabel('Time (s)')
@@ -237,7 +236,7 @@ def compare_kinematics(compare_save_path, sim_list,
     # List of data and datalabels
     fig, ax = plt.subplots()
     for i, simulation in enumerate(sim_list, start=1):
-        ax.plot(sim.kin_data[channelsimt], sim.kin_data[channel_Head_aRy_rad_s_s], label=sim.label)
+        ax.plot(sim.kinematics[channelsimt], sim.kinematics[channel_Head_aRy_rad_s_s], label=sim.label)
 
     ax.plot(average_data[channelt], average_data[Head_ao_rad_s_s_23], label=Head_ao_rad_s_s_23, color="red")
     ax.plot(average_data[channelt], low_data[Head_ao_rad_s_s_23], color="lightpink")
@@ -259,7 +258,7 @@ def compare_kinematics(compare_save_path, sim_list,
     fig, ax = plt.subplots()
     for sim in sim_list:
         if sim.label == 'passive':
-            ax.plot(sim.kin_data[channelsimt], sim.kin_data[channel_Head_aRy_rad_s_s], label=sim.label)
+            ax.plot(sim.kinematics[channelsimt], sim.kinematics[channel_Head_aRy_rad_s_s], label=sim.label)
     ax.plot(average_panzer_y_df["x"]/1000, average_panzer_y_df["Passive Y Rot. Accel"], label="Panzer Head Y Rot Accel.")
 
     ax.set_xlim(0, 0.25)
@@ -277,7 +276,7 @@ def compare_kinematics(compare_save_path, sim_list,
     fig, ax = plt.subplots()
     for sim in sim_list:
         if sim.label == 'passive':
-            ax.plot(sim.kin_data[channelsimt], sim.kin_data[channel_Head_aRy_rad_s_s], label=sim.label)
+            ax.plot(sim.kinematics[channelsimt], sim.kinematics[channel_Head_aRy_rad_s_s], label=sim.label)
     ax.plot(average_panzer_y_df["x"]/1000, average_panzer_y_df["Passive Y Rot. Accel"], label="Panzer Head Y Rot Accel.")
 
     ax.set_xlim(0, 0.25)
@@ -293,7 +292,7 @@ def compare_kinematics(compare_save_path, sim_list,
 
     fig, ax = plt.subplots()
     for i, simulation in enumerate(sim_list, start=1):
-        ax.plot(sim.kin_data[channelsimt], sim.kin_data[channel_T1_Dx_mm], label=sim.label)
+        ax.plot(sim.kinematics[channelsimt], sim.kinematics[channel_T1_Dx_mm], label=sim.label)
 
     ax.set_xlim(0, 0.25)
     ax.set_xlabel('Time (s)')
@@ -308,7 +307,7 @@ def compare_kinematics(compare_save_path, sim_list,
     fig, ax = plt.subplots()
     for sim in sim_list:
         if sim.label == 'passive':
-            ax.plot(sim.kin_data[channelsimt], sim.kin_data[channel_Head_aRy_rad_s_s], label=sim.label)
+            ax.plot(sim.kinematics[channelsimt], sim.kinematics[channel_Head_aRy_rad_s_s], label=sim.label)
     ax.plot(average_panzer_y_df["x"]/1000, average_panzer_y_df["Passive Y Rot. Accel"], label="Panzer Head Y Rot Accel.")
 
     ax.set_xlim(0, 0.25)
@@ -324,7 +323,7 @@ def compare_kinematics(compare_save_path, sim_list,
 
     fig, ax = plt.subplots()
     for sim in sim_list:
-        ax.plot(sim.kin_data[channelsimt], sim.kin_data[channel_Head_aRy_rad_s_s], label=sim.label)
+        ax.plot(sim.kinematics[channelsimt], sim.kinematics[channel_Head_aRy_rad_s_s], label=sim.label)
 
     ax.plot(average_panzer_y_df["x"]/1000, average_panzer_y_df["Passive Y Rot. Accel"], label="Panzer Head Y Rot Accel.")
 
@@ -341,7 +340,7 @@ def compare_kinematics(compare_save_path, sim_list,
 
     fig, ax = plt.subplots()
     for sim in sim_list:
-        ax.plot(sim.kin_data[channelsimt], sim.kin_data[channel_T1_Dx_mm], label=sim.label)
+        ax.plot(sim.kinematics[channelsimt], sim.kinematics[channel_T1_Dx_mm], label=sim.label)
 
     ax.set_xlim(0, 0.25)
     ax.set_xlabel('Time (s)')
@@ -355,7 +354,7 @@ def compare_kinematics(compare_save_path, sim_list,
 
     fig, ax = plt.subplots()
     for sim in sim_list:
-        ax.plot(sim.kin_data[channelsimt], sim.kin_data[channel_T1_Ry_deg], label=sim.label)
+        ax.plot(sim.kinematics[channelsimt], sim.kinematics[channel_T1_Ry_deg], label=sim.label)
 
     ax.set_xlim(0, 0.25)
     ax.set_xlabel('Time (s)')
@@ -369,7 +368,7 @@ def compare_kinematics(compare_save_path, sim_list,
 
     fig, ax = plt.subplots()
     for sim in sim_list:
-        ax.plot(sim.kin_data[channelsimt], sim.kin_data[Sim_Rel_Head_Dx], label=sim.label)
+        ax.plot(sim.kinematics[channelsimt], sim.kinematics[Sim_Rel_Head_Dx], label=sim.label)
 
     ax.plot(average_data[channelt], average_data[Rel_Head_Dx], label=Rel_Head_Dx, color="red")
     ax.plot(average_data[channelt], low_data[Rel_Head_Dx], color="lightpink")
@@ -388,7 +387,7 @@ def compare_kinematics(compare_save_path, sim_list,
     # Rel Head Y Rotation (deg)
     fig, ax = plt.subplots()
     for sim in sim_list:
-        ax.plot(sim.kin_data[channelsimt], sim.kin_data[Sim_Rel_Head_Ry], label=sim.label)
+        ax.plot(sim.kinematics[channelsimt], sim.kinematics[Sim_Rel_Head_Ry], label=sim.label)
 
     ax.plot(average_data[channelt], average_data[Head_ao_deg_23], label='Head_ao_deg_23', color="red")
     ax.plot(average_data[channelt], low_data[Head_ao_deg_23], color="lightpink")
@@ -411,21 +410,20 @@ def compare_kinematics(compare_save_path, sim_list,
     plt.rcParams['font.size'] = '20'
 
     for sim in sim_list:
-        print(sim.label)
-    def plot_sim_subplot(ax, simulation, simlabel, average_data, low_data, high_data, channelsimt, channelt, expydata, simydata,
-                     ylabel, title, color='red'):
-        ax.plot(simulation.kin_data[channelsimt], simulation.kin_data[simydata], label=simulation.label)
-        ax.set_title(title)
-        ax.set_xlim(0, 0.25)
-        ax.set_xlabel('Time (s)')
-        ax.set_ylabel(ylabel)
-        ax.grid(True)
-        ax.legend()
-    def plot_exp_subplot(ax, simulation, simlabel, average_data, low_data, high_data, channelsimt, channelt, expydata, simydata,
-                     ylabel, title, color='red'):
-        ax.plot(average_data[channelt], average_data[expydata], label=expydata, color=color)
-        ax.plot(low_data[channelt], low_data[expydata], color='lightpink')
-        ax.plot(high_data[channelt], high_data[expydata], color='lightpink')
+        def plot_sim_subplot(ax, simulation, simlabel, average_data, low_data, high_data, channelsimt, channelt, expydata, simydata,
+                         ylabel, title, color='blue'):
+            ax.plot(simulation.kinematics[channelsimt], simulation.kinematics[simydata], label=simulation.label)
+            ax.set_title(title)
+            ax.set_xlim(0, 0.25)
+            ax.set_xlabel('Time (s)')
+            ax.set_ylabel(simlabel)
+            ax.grid(True)
+            ax.legend()
+        def plot_exp_subplot(ax, simulation, simlabel, average_data, low_data, high_data, channelsimt, channelt, expydata, simydata,
+                         ylabel, title, color='red'):
+            ax.plot(average_data[channelt], average_data[expydata], label=expydata, color=color)
+            ax.plot(low_data[channelt], low_data[expydata], color='lightpink')
+            ax.plot(high_data[channelt], high_data[expydata], color='lightpink')
 
     # Flatten the 2D array of subplots
     ax_flat = ax.flatten()
@@ -489,7 +487,5 @@ def compare_kinematics(compare_save_path, sim_list,
     plt.tight_layout()
     plt.savefig('Simulation Results Summary.png')
     plt.close()
-
-    print('(completed)\n')
 
     return

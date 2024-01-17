@@ -10,10 +10,11 @@ from E_Process_Muscle_Data.Process_Muscle_Data import Muscle
 from F_Process_Injury_Data.NIJ.Calculate_NIJ import calculate_NIJ
 ########################################################################################################################
 class Simulation:
-    def __init__(self, dir_path, disc_dict_list, ligament_dict_list, muscle_dict_list, datalabel,
+    def __init__(self, compare_dir_path, dir_path, disc_dict_list, ligament_dict_list, muscle_dict_list, datalabel,
                  exp_kinematic_data):
 
         self.dir_path = dir_path
+        self.compare_dir_path = compare_dir_path
         self.kin_dir_path = os.path.join(dir_path, "Kinematics Data")
         #TODO: Create a separate folder for vertebral rotation data:
         self.vert_dir_path = os.path.join(dir_path, "Kinematics Data")
@@ -25,8 +26,14 @@ class Simulation:
         self.label = datalabel
 
         self.exp_kinematic_data = exp_kinematic_data
+        self.average_data = exp_kinematic_data['NBDL_average']
+        self.low_data = exp_kinematic_data['NBDL_STDEV-1']
+        self.high_data = exp_kinematic_data['NBDL_STDEV+1']
+        self.panzer_kinematic_data = exp_kinematic_data['panzer_kinematic_data']
+        self.thunn_data = exp_kinematic_data['thunn_data']
+
         self.kinematics = self.process_kinematics()
-        self.processed_kinematics = self.load_processed_kinematics()
+        # self.processed_kinematics = self.load_processed_kinematics()
 
         self.vertebrae = self.process_vertebrae()
 
@@ -44,14 +51,9 @@ class Simulation:
         os.chdir(self.kin_dir_path)
         kin_file_path = os.path.join(self.kin_dir_path, 'results.txt')
 
-        average_data = self.exp_kinematic_data['NBDL_average']
-        low_data = self.exp_kinematic_data['NBDL_STDEV-1']
-        high_data =  self.exp_kinematic_data['NBDL_STDEV+1']
-        panzer_kinematic_data = self.exp_kinematic_data['panzer_kinematic_data']
-        thunn_data =  self.exp_kinematic_data['thunn_data']
-
-        kinematics = process_kinematic_data(self, kin_file_path, average_data, low_data, high_data, panzer_kinematic_data, thunn_data)
-        return kinematics
+        self.kinematics = process_kinematic_data(self, kin_file_path, self.average_data, self.low_data, self.high_data,
+                                                 self.panzer_kinematic_data, self.thunn_data)
+        return self.kinematics
 
     def process_vertebrae(self):
 
@@ -59,8 +61,8 @@ class Simulation:
         vert_file_path = os.path.join(self.kin_dir_path, 'results.txt')
         panzer_vertebral_data =  self.exp_kinematic_data['panzer_vertebral_data']
 
-        vertebrae = process_vertebrae_rotations(self, vert_file_path, panzer_vertebral_data)
-        return vertebrae
+        self.vertebrae = process_vertebrae_rotations(self, vert_file_path, panzer_vertebral_data)
+        return self.vertebrae
 
     def set_disc_paths(self, disc_dir_path, disc_dict_list):
         discs = []
@@ -122,10 +124,12 @@ class Simulation:
         nij_file_path = os.path.join(self.nij_dir_path, 'force_results.txt')
         calculate_NIJ(self, nij_file_path)
 
-    def load_processed_kinematics(self):
-        load_path = os.path.join(self.kin_dir_path, 'results.csv')
-        # Add your logic to load data from CSV
-        if os.path.exists(load_path):
-            return pd.read_csv(load_path, sep=',', engine='python', index_col=False)
-        else:
-            return pd.DataFrame()
+    # def load_processed_kinematics(self):
+    #     load_path = os.path.join(self.kin_dir_path, 'results.csv')
+    #     # Add your logic to load data from CSV
+    #     if os.path.exists(load_path):
+    #         self.processed_kinematics = pd.read_csv(load_path, sep=',', engine='python', index_col=False)
+    #         return self.processed_kinematics
+    #     else:
+    #         return pd.DataFrame()
+

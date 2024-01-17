@@ -14,10 +14,10 @@ def call_panzer_kinematics(panzer_data_path):
     panzer_z_path = os.path.join(panzer_data_path, "Passive Z Accel.csv")
     average_panzer_z_df = pd.read_csv(panzer_z_path, sep=',', engine = 'python', index_col=False)
 
-
-    merge_data = pd.merge(average_panzer_x_df, average_panzer_y_df, on='x')
-    panzer_kinematic_data = pd.merge(merge_data, average_panzer_z_df, on='x')
-
+    panzer_kinematic_data = {'average_panzer_x_df':average_panzer_x_df,
+                             'average_panzer_y_df': average_panzer_y_df,
+                             'average_panzer_z_df': average_panzer_z_df
+    }
 
     return panzer_kinematic_data
 
