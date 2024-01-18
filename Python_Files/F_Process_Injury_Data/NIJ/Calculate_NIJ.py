@@ -4,30 +4,41 @@ from collections import defaultdict
 import os
 
 def calculate_NIJ(sim, nij_file_path):
+    # Define the injury criterion values in a dictionary
+    nij_injury_criterion = {
+        'Fcrit_tension': 6806,
+        'Fcrit_compression': -6160,
+        'Mcrit_flexion': 310,
+        'Mcrit_extension': -135
+    }
+
     def calculate_NIJ_values(Fz, My):
-        # Calculate Nij for each time step
-        Fcrit_tension = 6806
-        Fcrit_compression = -6160
-        Mcrit_flexion = 310
-        Mcrit_extension = -135
+        # Extract critical values from the dictionary
+        Fcrit_tension = nij_injury_criterion['Fcrit_tension']
+        Fcrit_compression = nij_injury_criterion['Fcrit_compression']
+        Mcrit_flexion = nij_injury_criterion['Mcrit_flexion']
+        Mcrit_extension = nij_injury_criterion['Mcrit_extension']
 
-        if [(Fz >=0) & (My >=0)]:
-            Nij_values = ((Fz / Fcrit_tension) + (My / Mcrit_flexion))
+        # Initialize an empty Series for NIJ values
+        Nij_values = pd.Series(index=Fz.index)
 
-        elif [Fz >=0 & (My <=0)]:
-            Nij_values = ((Fz / Fcrit_tension) + (My / Mcrit_extension))
+        # Calculate Nij for each condition
+        condition1 = (Fz >= 0) & (My >= 0)
+        Nij_values[condition1] = (Fz[condition1] / Fcrit_tension) + (My[condition1] / Mcrit_flexion)
 
-        elif [(Fz <=0) & (My >=0)]:
-            Nij_values = ((Fz / Fcrit_compression) + (My / Mcrit_flexion))
+        condition2 = (Fz >= 0) & (My < 0)
+        Nij_values[condition2] = (Fz[condition2] / Fcrit_tension) + (My[condition2] / Mcrit_extension)
 
-        elif [(Fz <=0) & (My <=0)]:
-            Nij_values = ((Fz / Fcrit_compression) + (My / Mcrit_extension))
-        Nij_values = round(Nij_values,3)
+        condition3 = (Fz < 0) & (My >= 0)
+        Nij_values[condition3] = (Fz[condition3] / Fcrit_compression) + (My[condition3] / Mcrit_flexion)
 
-        # # Clip the values to ensure they are between 0 and 1
-        # Nij_values = np.clip(Nij_values, 0, 1)
+        condition4 = (Fz < 0) & (My < 0)
+        Nij_values[condition4] = (Fz[condition4] / Fcrit_compression) + (My[condition4] / Mcrit_extension)
 
-        return Nij_values
+        # Round the values
+        Nij_values = Nij_values.round(3)
+
+        return round(Nij_values, 3)
 
     ###########################################################################################################
 
@@ -66,14 +77,15 @@ def calculate_NIJ(sim, nij_file_path):
     OC_data = df[['Sim_Time_s', 'Fz_31', 'Mx_31']].copy()
     OC_data = OC_data.rename(columns={'Fz_31': 'Fz', 'Mx_31': 'My'})
     Sim_Time_s = OC_data['Sim_Time_s']
-    Fz = OC_data['Fz']
-    My = OC_data['My']
-    Fz_min = min(Fz)
-    Fz_max = max(Fz)
-    My_min = min(My)
-    My_max = max(My)
+    df['Fz'] = OC_data['Fz']
+    df['My'] = OC_data['My']
+    Fz_min = min(df['Fz'])
+    Fz_max = max(df['Fz'])
+    My_min = min(df['My'])
+    My_max = max(df['My'])
 
-    Nij_results = calculate_NIJ_values(Fz, My)
+    Nij_results = calculate_NIJ_values(df['Fz'], df['My'])
+
     df['NIJ'] = Nij_results
     # print(f"NIJ results:\n{Nij_results}\n")
 
@@ -113,7 +125,7 @@ def calculate_NIJ(sim, nij_file_path):
     y_lower = [0, Fcrit_compression,0]
 
     # Plot the Nij values over time
-    plt.plot(My, Fz, marker='o', linestyle=' ', color='g', label='Nij')
+    plt.plot(df['My'], df['Fz'], marker='o', linestyle=' ', color='g', label='Nij')
     plt.plot(x, y_upper, marker='o', linestyle='--', color='b')
     plt.plot(x, y_lower, marker='o', linestyle='--', color='b')
 
@@ -125,72 +137,71 @@ def calculate_NIJ(sim, nij_file_path):
     plt.savefig('NIJ.png')
     plt.close()
 
-    #######################################################################################################################
-
-    # Define the number of rigid_bodies, associated variables, and rows
-    num_rigid_bodies = 9
-    num_variables = 6
-
-    # Get the number of rows dynamically
-    num_rows = df.shape[0]
-
-    # Create an empty DataFrame to store the results
-    Fr_df = pd.DataFrame()
-    Mr_df = pd.DataFrame()
-
-    # Define the calc_rigid_body function
-    def calc_Fr(rb_variables):
-        Fx = rb_variables.iloc[:, 0]
-        Fy = rb_variables.iloc[:, 1]
-        Fz = rb_variables.iloc[:, 2]
-        Fr_value = round((((Fx**2)+(Fy**2)+(Fz**2))**0.5),1)
-        return Fr_value
-
-    def calc_Mr(rb_variables):
-        Mx = rb_variables.iloc[:, 3]
-        My = rb_variables.iloc[:, 4]
-        Mz = rb_variables.iloc[:, 5]
-        Mr_value = round((((Mx**2)+(My**2)+(Mz**2))**0.5),1)
-        return Mr_value
-
-    Fr_results = []
-    Mr_results = []
-
-    # Loop through each rigid_body
-    for rigid_body in range(num_rigid_bodies):
-        # Extract the 6 associated variables for the current rigid_body
-        rb_variables = df.iloc[:, (rigid_body * num_variables) + 1:((rigid_body + 1) * num_variables) + 1]
-        # Perform the calculation using the calc_rigid_body function
-        Fr_result = calc_Fr(rb_variables)
-        Mr_result = calc_Mr(rb_variables)
-
-        # Append the individual rigid_body result to the list
-        Fr_results.append(pd.Series(Fr_result, name=f'Rigid_Body_{rigid_body + 1}_Fr'))
-        Mr_results.append(pd.Series(Mr_result, name=f'Rigid_Body_{rigid_body + 1}_Mr '))
-
-
-    Fr_df = pd.concat(Fr_results, axis=1)
-    Mr_df = pd.concat(Mr_results, axis=1)
-    # Set the time column from the original DataFrame as the index of the result_df
-    # Fr_df.index = df.iloc[:, 0]
-    # Mr_df.index = df.iloc[:, 0]
-    # Fr_df.columns.values[0] = 'Sim_Time_s'
-    # Mr_df.columns.values[0] = 'Sim_Time_s'
-
-    Fr_df['Sim_Time_s'] = df['Sim_Time_s']
-    Mr_df['Sim_Time_s'] = df['Sim_Time_s']
-
-    # Define the name of the column you want to move to the first position
-    column_to_move = 'Sim_Time_s'
-
-    # Reorder the columns
-    new_order = [column_to_move] + [col for col in Fr_df.columns if col != column_to_move]
-    Fr_df = Fr_df[new_order]
-
-    # Reorder the columns
-    new_order = [column_to_move] + [col for col in Mr_df.columns if col != column_to_move]
-    Mr_df = Mr_df[new_order]
-
+    # #######################################################################################################################
+    #
+    # # Define the number of rigid_bodies, associated variables, and rows
+    # num_rigid_bodies = 9
+    # num_variables = 6
+    #
+    # # Get the number of rows dynamically
+    # num_rows = df.shape[0]
+    #
+    # # Create an empty DataFrame to store the results
+    # Fr_df = pd.DataFrame()
+    # Mr_df = pd.DataFrame()
+    #
+    # # Define the calc_rigid_body function
+    # def calc_Fr(rb_variables):
+    #     Fx = rb_variables.iloc[:, 0]
+    #     Fy = rb_variables.iloc[:, 1]
+    #     Fz = rb_variables.iloc[:, 2]
+    #     Fr_value = round((((Fx**2)+(Fy**2)+(Fz**2))**0.5),1)
+    #     return Fr_value
+    #
+    # def calc_Mr(rb_variables):
+    #     Mx = rb_variables.iloc[:, 3]
+    #     My = rb_variables.iloc[:, 4]
+    #     Mz = rb_variables.iloc[:, 5]
+    #     Mr_value = round((((Mx**2)+(My**2)+(Mz**2))**0.5),1)
+    #     return Mr_value
+    #
+    # Fr_results = []
+    # Mr_results = []
+    #
+    # # Loop through each rigid_body
+    # for rigid_body in range(num_rigid_bodies):
+    #     # Extract the 6 associated variables for the current rigid_body
+    #     rb_variables = df.iloc[:, (rigid_body * num_variables) + 1:((rigid_body + 1) * num_variables) + 1]
+    #     # Perform the calculation using the calc_rigid_body function
+    #     Fr_result = calc_Fr(rb_variables)
+    #     Mr_result = calc_Mr(rb_variables)
+    #
+    #     # Append the individual rigid_body result to the list
+    #     Fr_results.append(pd.Series(Fr_result, name=f'Rigid_Body_{rigid_body + 1}_Fr'))
+    #     Mr_results.append(pd.Series(Mr_result, name=f'Rigid_Body_{rigid_body + 1}_Mr '))
+    #
+    #
+    # Fr_df = pd.concat(Fr_results, axis=1)
+    # Mr_df = pd.concat(Mr_results, axis=1)
+    # # Set the time column from the original DataFrame as the index of the result_df
+    # # Fr_df.index = df.iloc[:, 0]
+    # # Mr_df.index = df.iloc[:, 0]
+    # # Fr_df.columns.values[0] = 'Sim_Time_s'
+    # # Mr_df.columns.values[0] = 'Sim_Time_s'
+    #
+    # Fr_df['Sim_Time_s'] = df['Sim_Time_s']
+    # Mr_df['Sim_Time_s'] = df['Sim_Time_s']
+    #
+    # # Define the name of the column you want to move to the first position
+    # column_to_move = 'Sim_Time_s'
+    #
+    # # Reorder the columns
+    # new_order = [column_to_move] + [col for col in Fr_df.columns if col != column_to_move]
+    # Fr_df = Fr_df[new_order]
+    #
+    # # Reorder the columns
+    # new_order = [column_to_move] + [col for col in Mr_df.columns if col != column_to_move]
+    # Mr_df = Mr_df[new_order]
 
 
     # # Find the column with the greatest value
@@ -261,6 +272,6 @@ def calculate_NIJ(sim, nij_file_path):
 
     ###########################################################################################################
 
-    pass
+    return df, nij_injury_criterion
 
 

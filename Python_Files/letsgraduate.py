@@ -72,14 +72,14 @@ for sim in simulations:
     # # plot_ligament_data_summary(sim)
     # print("\n(completed)\n")
     #
-    print(f"Processing Muscle Data for: {sim.label}\n")
-    sim.process_muscles()
-    # plot_muscle_data_summary(sim)
-    print("\n(completed)\n")
-    #
-    # print(f"Processing NIJ Data for: {sim.label}\n")
-    # sim.process_NIJ()
+    # print(f"Processing Muscle Data for: {sim.label}\n")
+    # sim.process_muscles()
+    # # plot_muscle_data_summary(sim)
     # print("\n(completed)\n")
+    #
+    print(f"Processing NIJ Data for: {sim.label}\n")
+    sim.process_NIJ()
+    print("\n(completed)\n")
 
 
 from G_Analyze_Parametric_Results.Compare_Kinematics import compare_kinematic_data
@@ -87,6 +87,7 @@ from G_Analyze_Parametric_Results.Compare_Vertebral_Data import compare_vertebra
 from G_Analyze_Parametric_Results.Compare_Disc_Data import compare_disc_data
 from G_Analyze_Parametric_Results.Compare_Ligament_Data import compare_ligament_data
 from G_Analyze_Parametric_Results.Compare_Muscle_Data import compare_muscle_data
+from G_Analyze_Parametric_Results.Compare_NIJ_Data import compare_nij_data
 os.chdir(compare_dir_path)
 
 # print(f"Comparing Kinematic Data")
@@ -107,9 +108,14 @@ os.chdir(compare_dir_path)
 #     compare_ligament_data(simulations, level)
 # print("\n(completed)\n")
 
-print(f"Comparing Muscle Data")
+# print(f"Comparing Muscle Data")
+# # Call the function in your main script
+# compare_muscle_data(simulations)
+# print("\n(completed)\n")
+
+print(f"Comparing NIJ Data")
 # Call the function in your main script
-compare_muscle_data(simulations)
+compare_nij_data(simulations)
 print("\n(completed)\n")
 
 

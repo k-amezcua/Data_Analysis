@@ -139,7 +139,7 @@ class Simulation:
     def process_NIJ(self):
         os.chdir(self.nij_dir_path)
         nij_file_path = os.path.join(self.nij_dir_path, 'force_results.txt')
-        calculate_NIJ(self, nij_file_path)
+        self.nij, self.nij_injury_criterion = calculate_NIJ(self, nij_file_path)
 
     # def load_processed_kinematics(self):
     #     load_path = os.path.join(self.kin_dir_path, 'results.csv')
