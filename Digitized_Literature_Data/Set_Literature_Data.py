@@ -7,6 +7,18 @@ def set_literature_data():
     NBDL_data_path = r"C:\Users\kryst\Desktop\THESIS\Data_Analysis\15G NBDL Data\Processed Data\Compiled Test Data"
     average_data, low_data, high_data = NBDL.callNBDL(NBDL_data_path)
 
+    import pandas as pd
+
+    # Define the file paths for the Excel files
+    average_data_path = r"C:\Users\kryst\Desktop\THESIS\Data_Analysis\15G NBDL Data\Processed Data\Compiled Test Data\NBDL_average_data.xlsx"
+    low_data_path = r"C:\Users\kryst\Desktop\THESIS\Data_Analysis\15G NBDL Data\Processed Data\Compiled Test Data\NBDL_low_data.xlsx"
+    high_data_path = r"C:\Users\kryst\Desktop\THESIS\Data_Analysis\15G NBDL Data\Processed Data\Compiled Test Data\NBDL_high_data.xlsx"
+
+    # Save each DataFrame to its respective Excel file
+    average_data.to_excel(average_data_path, index=False)
+    low_data.to_excel(low_data_path, index=False)
+    high_data.to_excel(high_data_path, index=False)
+
     # Panzer kinematics literature data needed for comparison
     panzer_data_path = r"C:\Users\kryst\Desktop\THESIS\Data_Analysis\Digitized_Literature_Data\Panzer_Accel_Results_Comparison"
     panzer_kinematic_data = panzer_lit.call_panzer_kinematics(panzer_data_path)
