@@ -33,24 +33,26 @@ disc_dict_list, ligament_dict_list, muscle_dict_list = create_dictionaries()
 ########################################################################################################################
 # Collect NBDL & Literature Data
 
-from Digitized_Literature_Data.Set_Literature_Data import set_literature_data
+from Python_Files.A_Process_NBDL_Data.Set_Literature_Data import set_literature_data
+from H_CORA_Analysis.Process_NBDL_for_CORA import pre_process_NBDL_for_cora
 exp_kinematic_data = set_literature_data()
+pre_process_NBDL_for_cora(exp_kinematic_data)
+print('processed NBDL data for CORA\n')
+
 
 ########################################################################################################################
 # Process & Plot Data for Each Simulation
 ########################################################################################################################
 
-from C_Process_Disc_Data.Plot_Disc_Data import plot_disc_data
-from C_Process_Disc_Data.Plot_Disc_Data import plot_disc_data_summary
-from D_Process_Ligament_Data.Plot_Ligament_Data import plot_ligament_data_summary
-from E_Process_Muscle_Data.Plot_Muscle_Data import plot_muscle_data_summary
+from H_CORA_Analysis.Process_Simulations_for_CORA import pre_process_sim_for_cora
 
 simulations = [Simulation(compare_dir_path, dir_path, disc_dict_list, ligament_dict_list, muscle_dict_list, datalabel, exp_kinematic_data) for dir_path, datalabel in zip(dir_paths, datalabels)]
 
 for sim in simulations:
-    # print(f"Processing Kinematic Data for: {sim.label} ---------------------------------------------------------------")
-    # sim.process_kinematics()
-    # print("(completed)\n")
+    print(f"Processing Kinematic Data for: {sim.label} ---------------------------------------------------------------")
+    sim.process_kinematics()
+    pre_process_sim_for_cora(sim)
+    print(f"Processed data for CORA\n")
 
     # print(f"Processing Vertebral Rotation Data for: {sim.label}\n")
     # sim.process_vertebrae()
@@ -77,17 +79,11 @@ for sim in simulations:
     # # plot_muscle_data_summary(sim)
     # print("\n(completed)\n")
     #
-    print(f"Processing NIJ Data for: {sim.label}\n")
-    sim.process_NIJ()
-    print("\n(completed)\n")
+    # print(f"Processing NIJ Data for: {sim.label}\n")
+    # sim.process_NIJ()
+    # print("\n(completed)\n")
 
 
-from G_Analyze_Parametric_Results.Compare_Kinematics import compare_kinematic_data
-from G_Analyze_Parametric_Results.Compare_Vertebral_Data import compare_vertebral_data
-from G_Analyze_Parametric_Results.Compare_Disc_Data import compare_disc_data
-from G_Analyze_Parametric_Results.Compare_Ligament_Data import compare_ligament_data
-from G_Analyze_Parametric_Results.Compare_Muscle_Data import compare_muscle_data
-from G_Analyze_Parametric_Results.Compare_NIJ_Data import compare_nij_data
 os.chdir(compare_dir_path)
 
 # print(f"Comparing Kinematic Data")
@@ -113,10 +109,10 @@ os.chdir(compare_dir_path)
 # compare_muscle_data(simulations)
 # print("\n(completed)\n")
 
-print(f"Comparing NIJ Data")
-# Call the function in your main script
-compare_nij_data(simulations)
-print("\n(completed)\n")
+# print(f"Comparing NIJ Data")
+# # Call the function in your main script
+# compare_nij_data(simulations)
+# print("\n(completed)\n")
 
 
 
