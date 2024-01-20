@@ -55,38 +55,76 @@ def pre_process_NBDL_for_cora(exp_kinematic_data):
     exp_head_z_accel_data_filename = os.path.join(current_script_path, 'exp_head_z_accel.dat')
     exp_head_y_rot_accel_data_filename = os.path.join(current_script_path, 'exp_head_y_rot_accel.dat')
 
-    # exp_stdev_head_x_accel_filename = os.path.join(current_script_path, 'exp_stdev_head_x_accel.at')
-    # exp_stdev_head_z_accel_filename = os.path.join(current_script_path, 'exp_stdev_head_z_accel.at')
-    # exp_stdev_head_y_rot_accel_filename = os.path.join(current_script_path, 'exp_stdev_head_y_rot_accel.at')
+    exp_stdev_head_x_accel_filename = os.path.join(current_script_path, 'exp_stdev_head_x_accel.at')
+    exp_stdev_head_z_accel_filename = os.path.join(current_script_path, 'exp_stdev_head_z_accel.at')
+    exp_stdev_head_y_rot_accel_filename = os.path.join(current_script_path, 'exp_stdev_head_y_rot_accel.at')
 
     # Save .dat file for CORA analysis with space delimiter
     with open(exp_head_accel_data_filename, 'w') as f:
-        f.write("XYDATA,\thead_x_accel / (G),\thead_z_accel / (G),\thead_y_rot_accel / (G)\n")
-        average_data_cora.to_csv(f, sep='\t', index=False, header=False)
+        f.write("XYDATA, head_x_accel, head_z_accel, head_y_rot_accel\n")
+        average_data_cora.to_csv(f, sep=' ', index=False, header=False)
+        f.write("ENDATA\n")
 
     def save_data_with_time(df, label, filename):
         # Save .dat file with time and corresponding data
         with open(filename, 'w') as f:
-            f.write(f"XYDATA,\t{label} / (G)\n")  # Replace (unit) with actual unit
-            df.to_csv(f, sep='\t', index=False, header=False)
+            f.write(f"XYDATA, {label}\n")  # Replace (unit) with actual unit
+            df.to_csv(f, sep=' ', index=False, header=False)
+            f.write("ENDATA\n")
 
     # Call this function for each required data file
     save_data_with_time(average_data_cora[['Time_s', 'head_x_accel']], 'head_x_accel', exp_head_x_accel_data_filename)
     save_data_with_time(average_data_cora[['Time_s', 'head_z_accel']], 'head_z_accel', exp_head_z_accel_data_filename)
     save_data_with_time(average_data_cora[['Time_s', 'head_y_rot_accel']], 'head_y_rot_accel', exp_head_y_rot_accel_data_filename)
 
+    # low data, high data
     # def save_stdev_data(df_low, df_high, label, filename):
-    #     # Combine low and high data
-    #     combined_data = pd.concat([df_low, df_high], axis=1)
-    #     # Save .dat file with low and high data
     #     with open(filename, 'w') as f:
-    #         f.write(f"{label} / (G),\t{label} / (G)\n")  # Replace (unit) with actual unit
-    #         combined_data.to_csv(f, sep='\t', index=False, header=False)
+    #         # Write header
+    #         f.write(f"XYDATA, {label}\n")
+    #         # Write low and high data in two columns
+    #         for (index_low, value_low), (index_high, value_high) in zip(df_low.iteritems(), df_high.iteritems()):
+    #             f.write(f"{value_low}\t{value_high}\n")
+    #         # Write 'ENDATA' at the end
+    #         f.write("ENDATA\n")
     #
     # # Call this function for each required standard deviation file
     # save_stdev_data(low_data_cora['head_x_accel'], high_data_cora['head_x_accel'], 'head_x_accel', exp_stdev_head_x_accel_filename)
     # save_stdev_data(low_data_cora['head_z_accel'], high_data_cora['head_z_accel'], 'head_z_accel', exp_stdev_head_z_accel_filename)
     # save_stdev_data(low_data_cora['head_y_rot_accel'], high_data_cora['head_y_rot_accel'], 'head_y_rot_accel', exp_stdev_head_y_rot_accel_filename)
-    # # Repeat for other files and columns
+
+    # time, low
+    # time, high
+    def save_stdev_data_with_time(df_low, df_high, time_col, label, filename):
+        with open(filename, 'w') as f:
+            # Write header and low data curve with time
+            f.write(f"XYDATA, {label}\n")
+            for index, row in df_low.iterrows():
+                f.write(f"{row[time_col]}\t{row[label]}\n")
+            # Write 'ENDATA' to separate curves
+            f.write("ENDATA\n")
+            # Write header and high data curve with time
+            f.write(f"XYDATA, {label}\n")
+            for index, row in df_high.iterrows():
+                f.write(f"{row[time_col]}\t{row[label]}\n")
+            # Write 'ENDATA' at the end
+            f.write("ENDATA\n")
+
+            f.write(f"XYDATA, {label}\n")
+            for index, row in df_low.iterrows():
+                f.write(f"{row[time_col]}\t{row[label]}\n")
+            # Write 'ENDATA' to separate curves
+            f.write("ENDATA\n")
+            # Write header and high data curve with time
+            f.write(f"XYDATA, {label}\n")
+            for index, row in df_high.iterrows():
+                f.write(f"{row[time_col]}\t{row[label]}\n")
+            # Write 'ENDATA' at the end
+            f.write("ENDATA\n")
+
+    # Example usage
+    save_stdev_data_with_time(low_data_cora, high_data_cora, 'Time_s', 'head_x_accel', exp_stdev_head_x_accel_filename)
+    save_stdev_data_with_time(low_data_cora, high_data_cora, 'Time_s', 'head_z_accel', exp_stdev_head_z_accel_filename)
+    save_stdev_data_with_time(low_data_cora, high_data_cora, 'Time_s', 'head_y_rot_accel', exp_stdev_head_y_rot_accel_filename)
 
     return

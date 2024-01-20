@@ -10,7 +10,7 @@ compare_dir_path = r"C:\Users\kryst\Desktop\THESIS\00 Parameter Study\Troublesho
 
 dir_paths = [
                 r"C:\Users\kryst\Desktop\THESIS\00 Parameter Study\Troubleshooting\LOA Testing - 0pt2, 74 ms, FE",
-                # r"C:\Users\kryst\Desktop\THESIS\00 Parameter Study\Troubleshooting\LOA Testing - 1pt0, 74 ms, FE",
+                r"C:\Users\kryst\Desktop\THESIS\00 Parameter Study\Troubleshooting\LOA Testing - 1pt0, 74 ms, FE",
                 r"C:\Users\kryst\Desktop\THESIS\00 Parameter Study\1pt0 max muscle force\Active\74 ms delay\Active - Flexors and Extensors"
                 # add more paths as needed
 ]
@@ -18,9 +18,9 @@ dir_paths = [
 # Label each simulation to differentiate the results
 
 datalabels = [
-                "0.2 mmf - new LOA",
-                # "1.0 mmf - new LOA",
-                "1.0 mmf - prior LOA"
+                "0pt2_mmf_new_LOA",
+                "1pt0_mmf_new_LOA",
+                "1pt0_mmf_prior_LOA"
                 # Add more datalabels as needed
 ]
 
