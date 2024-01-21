@@ -11,7 +11,7 @@ compare_dir_path = r"C:\Users\kryst\Desktop\THESIS\00 Parameter Study\Troublesho
 dir_paths = [
                 # r"C:\Users\kryst\Desktop\THESIS\00 Parameter Study\Troubleshooting\LOA Testing - 0pt2, 74 ms, FE",
                 # r"C:\Users\kryst\Desktop\THESIS\00 Parameter Study\Troubleshooting\LOA Testing - 1pt0, 74 ms, FE",
-                # r"C:\Users\kryst\Desktop\THESIS\00 Parameter Study\1pt0 max muscle force\Active\74 ms delay\Active - Flexors and Extensors",
+                r"C:\Users\kryst\Desktop\THESIS\00 Parameter Study\1pt0 max muscle force\Active\74 ms delay\Active - Flexors and Extensors",
                 # r"C:\Users\kryst\Desktop\THESIS\00 Parameter Study\1pt0 max muscle force\Passive",
                 r"C:\Users\kryst\Desktop\THESIS\00 Parameter Study\1pt0 max muscle force\Active\74 ms delay\Active - Flexors and Extensors\smaller_time_step"
                 # add more paths as needed
@@ -22,7 +22,7 @@ dir_paths = [
 datalabels = [
                 # "0pt2_mmf_new_LOA",
                 # "1pt0_mmf_new_LOA",
-                # "1pt0_mmf_prior_LOA",
+                "1pt0_mmf_prior_LOA",
                 # "passive",
                 "1pt0_mmf_prior_LOA_small_step"
                 # Add more datalabels as needed
@@ -49,19 +49,49 @@ print('processed NBDL data for CORA\n')
 ########################################################################################################################
 
 from H_CORA_Analysis.Process_Simulations_for_CORA import pre_process_sim_for_cora
-from G_Analyze_Parametric_Results.Tissue_Response import peak_vertebra_values, peak_disc_values, peak_ligament_values, peak_muscle_values
+from G_Analyze_Parametric_Results.Global_Response import determine_NIJ, compare_NIJ
+from G_Analyze_Parametric_Results.Plot_Global_Response import plot_NIJ_table, plot_NIJ_comparison_table
+from G_Analyze_Parametric_Results.Tissue_Response import peak_vertebra, compare_peak_vertebra, peak_disc_values, peak_ligament_values, peak_muscle_values
+from G_Analyze_Parametric_Results.Plot_Tissue_Response_Tables import plot_peak_vertebra_table, plot_vertebra_comparison_table
+from G_Analyze_Parametric_Results.Global_Response import determine_peak_global_response, compare_peak_global_response
+from G_Analyze_Parametric_Results.Plot_Global_Response import plot_peak_global_response_table, plot_peak_global_comparison_table
 
 simulations = [Simulation(compare_dir_path, dir_path, disc_dict_list, ligament_dict_list, muscle_dict_list, datalabel, exp_kinematic_data) for dir_path, datalabel in zip(dir_paths, datalabels)]
 
+nij_values_dict = {}
+peak_vertebra_values_dict = {}
+peak_global_response_dict = {}
+
 for sim in simulations:
     # print(f"Processing Kinematic Data for: {sim.label} ---------------------------------------------------------------")
+    # print(f"Processing data for CORA")
     # sim.process_kinematics()
     # pre_process_sim_for_cora(sim)
-    # print(f"Processed data for CORA\n")
 
-    print(f"Processing Vertebral Rotation Data for: {sim.label}\n")
+    print(f"Processing NIJ Data")
+    sim.process_NIJ()
+
+    print(f"Calculating Peak Global Response")
+
+    peak_global_response = determine_peak_global_response(sim)
+    peak_global_response_dict[sim.label] = peak_global_response
+    # plot_peak_global_response_table(peak_global_response_dict)
+
+    nij_values_dict[sim.label] = determine_NIJ(sim)
+    plot_NIJ_table(nij_values_dict)
+    print(f"Completed\n")
+
+    ###################################################################
+
+    print(f"Processing Vertebral Rotation Data for: {sim.label}")
     sim.process_vertebrae()
+
+    print(f"Calculating Peak Vertebral Rotations")
+    peak_vertebra_values_dict[sim.label] = peak_vertebra(sim)
+    # plot_peak_vertebra_table(peak_vertebra_values_dict)
     print("(completed)\n")
+
+    ###################################################################
 
     # print(f"Processing Disc Data for: {sim.label}\n")
     # sim.process_discs()
@@ -83,26 +113,30 @@ for sim in simulations:
     # sim.process_muscles()
     # # plot_muscle_data_summary(sim)
     # print("\n(completed)\n")
-    #
-    # print(f"Processing NIJ Data for: {sim.label}\n")
-    # sim.process_NIJ()
-    # print("\n(completed)\n")
-
-    vertebra_max_table = peak_vertebra_values(sim)
-    print(vertebra_max_table)
-    # disc_max_table = peak_disc_values(sim)
-    # ligament_max_table = peak_ligament_values(sim)
-    # muscle_max_table = peak_muscle_values(sim)
-
-    # You can now do something with these tables, like saving them to a file
-
-    # vertebra_max_table.to_csv(f'{sim.label}_disc_peak_values.csv')
-    # disc_max_table.to_csv(f'{sim.label}_disc_peak_values.csv')
-    # ligament_max_table.to_csv(f'{sim.label}_ligament_peak_values.csv')
-    # muscle_max_table.to_csv(f'{sim.label}_muscle_peak_values.csv')
-
 
 os.chdir(compare_dir_path)
+
+#########################################################################################
+
+print(f"Comparing Peak Global Response")
+
+nij_comparison = compare_NIJ(simulations)
+plot_NIJ_comparison_table(nij_comparison)
+
+global_comparison = compare_peak_global_response(simulations)
+plot_peak_global_comparison_table(global_comparison)
+
+#########################################################################################
+
+print(f"Comparing Peak Vertebral Rotations")
+vertebral_comparison_df = compare_peak_vertebra(simulations)
+plot_vertebra_comparison_table(vertebral_comparison_df)
+
+#########################################################################################
+
+
+
+
 
 # print(f"Comparing Kinematic Data")
 # compare_kinematic_data(simulations, exp_kinematic_data)

@@ -72,7 +72,7 @@ BEGIN LOADCASE
 # 1 (Name), 2 (WF), 3 (Y_norm), 4 (t_min), 5 (t_max), 6 (g_V), 7 (g_G), 8 (g_P), 9 (g_1), 10 (g_2)
 # 11 (a_0), 12 (b_0), 13 (a_t), 14 (a_s), 15 (b_s), 16 (D_min), 17 (D_max), 18 (Filter)
 #   1                 2    3         4           5          6     7    8     9    10   11   12   13    14   15   16    17    18
-    head_y_rot_accel  1.0  extremum  0   automatic  automatic  0.5  0.25  0.25  0.5  0.05    0.5  NOTSPEC   0    0    0.01  0.12    D
+    head_y_rot_accel  1.0  extremum  0   automatic  automatic  0.5  0.25  0.25  0.5  0.05    0.5  NOTSPEC   0    0    0.01  0.12    0
   END SIGNALS
 END LOADCASE
 

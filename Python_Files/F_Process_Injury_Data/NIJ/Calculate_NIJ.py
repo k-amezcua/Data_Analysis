@@ -135,7 +135,7 @@ def calculate_NIJ(sim, nij_file_path):
     plt.legend()
     plt.grid(True)
     plt.savefig('NIJ.png')
-    plt.close()
+    plt.show()
 
     # #######################################################################################################################
     #

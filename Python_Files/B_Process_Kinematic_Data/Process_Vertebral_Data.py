@@ -103,7 +103,5 @@ def process_vertebrae_rotations(simulation, vert_file_path, panzer_vertebral_dat
 
     plot_vertebral_data(data, panzer_vertebral_data)
 
-    print(f"Vertebral Rotations: \n{data}")
-
     return data
 
