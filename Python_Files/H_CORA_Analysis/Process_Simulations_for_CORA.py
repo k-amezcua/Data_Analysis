@@ -38,17 +38,21 @@ def pre_process_sim_for_cora(sim):
 
     # Save .dat files for CORA analysis
     # Save .dat file for CORA analysis with space delimiter
-    with open(sim_head_accel_data_filename, 'w') as f:
-        f.write("XYDATA, head_x_accel, head_z_accel, head_y_rot_accel\n")
-        data_cora.to_csv(f, sep=' ', index=False, header=False)
-        f.write("ENDATA\n")
-    
+    # with open(sim_head_accel_data_filename, 'w') as f:
+    #     f.write("XYDATA, head_x_accel, head_z_accel, head_y_rot_accel\n")
+    #     data_cora.to_csv(f, sep=' ', index=False, header=False)
+    #     f.write("ENDATA\n")
+
     def save_data_with_time(df, label, filename):
-        # Save .dat file with time and corresponding data
         with open(filename, 'w') as f:
-            f.write(f"XYDATA, {label}\n")  # Replace (unit) with actual unit
-            df.to_csv(f, sep=' ', index=False, header=False)
+            f.write(f"XYDATA, {label}\n")
+            for index, row in df.iterrows():
+                line = ' '.join([str(row[col]) for col in df.columns])
+                f.write(line + '\n')
             f.write("ENDATA\n")
+
+    data_cora['head_z_accel'] = data_cora['head_z_accel']*-1
+    data_cora['head_y_rot_accel'] = data_cora['head_y_rot_accel']*-1
 
     # Call this function for each required data file
     save_data_with_time(data_cora[['Sim_Time_s', 'head_x_accel']], 'head_x_accel', sim_head_x_accel_data_filename)
@@ -66,8 +70,8 @@ def pre_process_sim_for_cora(sim):
             f.write("ENDATA\n")
 
     # Call this function for each required simulation 'standard deviation' file
-    save_stdev_data(data_cora, 'Sim_Time_s', 'head_x_accel', sim_stdev_head_x_accel_data_filename)
-    save_stdev_data(data_cora, 'Sim_Time_s', 'head_z_accel', sim_stdev_head_z_accel_data_filename)
-    save_stdev_data(data_cora, 'Sim_Time_s', 'head_y_rot_accel', sim_stdev_head_y_rot_accel_data_filename)
+    # save_stdev_data(data_cora, 'Sim_Time_s', 'head_x_accel', sim_stdev_head_x_accel_data_filename)
+    # save_stdev_data(data_cora, 'Sim_Time_s', 'head_z_accel', sim_stdev_head_z_accel_data_filename)
+    # save_stdev_data(data_cora, 'Sim_Time_s', 'head_y_rot_accel', sim_stdev_head_y_rot_accel_data_filename)
 
     return

@@ -1,3 +1,3 @@
-Warning: t_min calculated by A_THRES is first curve value; loadcase Head X Acceleration Analysis, signal head_x_accel.
-Warning: t_max calculated by B_THRES is last curve value; loadcase Head X Acceleration Analysis, signal head_x_accel.
-Error: End time of corridor 1 in file C:\Users\kryst\Desktop\THESIS\Data_Analysis\Python_Files\H_CORA_Analysis\Simulation_1\data\exp_stdev_head_x_accel t_end = 0.298500 < t_max = 250.000000
+Warning: t_max calculated by B_THRES is last curve value; loadcase Head Z Acceleration Analysis, signal head_z_accel.
+Warning: Number of supporting points before t_min reduces time shift from       42 to        0 for signal: head_z_accelloadcase: Head Z Acceleration Analysis !
+Warning: Number of supporting points after t_max reduces time shift from       42 to       37 for signal: head_z_accelloadcase: Head Z Acceleration Analysis !

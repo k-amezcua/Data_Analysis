@@ -9,7 +9,7 @@ def set_literature_data():
     current_script_path = os.path.dirname(os.path.realpath(__file__))
 
     # Construct the relative path to the data directory
-    NBDL_data_base_path  = os.path.join(current_script_path, '..', '..', '15G NBDL Data', 'Processed Data', 'Compiled Test Data')
+    NBDL_data_base_path  = os.path.join(current_script_path, '..', '..', '15G NBDL Data', 'Processed Data', 'Compiled Test Data', 'Average')
 
     # Call the function with the relative path
     average_data, low_data, high_data = NBDL.callNBDL(NBDL_data_base_path )
