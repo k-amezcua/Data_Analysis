@@ -53,7 +53,8 @@ from G_Analyze_Parametric_Results.Compare_Kinematics import compare_kinematic_da
 from C_Process_Disc_Data.Plot_Disc_Data import plot_disc_data, plot_disc_data_summary
 from G_Analyze_Parametric_Results.Tissue_Response import peak_ligament_values, compare_peak_ligament_values
 from G_Analyze_Parametric_Results.Plot_Tissue_Response_Tables import plot_individual_ligament_table, plot_comparison_ligament_table
-
+from G_Analyze_Parametric_Results.Tissue_Response import compare_peak_muscle_values, peak_muscle_values
+from G_Analyze_Parametric_Results.Plot_Tissue_Response_Tables import plot_comparison_muscle_table, plot_individual_muscle_table
 from H_CORA_Analysis.Process_Simulations_for_CORA import pre_process_sim_for_cora
 from G_Analyze_Parametric_Results.Global_Response import determine_NIJ, compare_NIJ
 from G_Analyze_Parametric_Results.Plot_Global_Response import plot_NIJ_table, plot_NIJ_comparison_table
@@ -72,6 +73,8 @@ peak_muscle_stress_values_dict = {}
 peak_muscle_strain_values_dict = {}
 peak_lig_force_values_dict = {}
 peak_lig_stretch_values_dict = {}
+peak_muscle_force_values_dict = {}
+peak_muscle_stretch_values_dict = {}
 
 for sim in simulations:
 
@@ -124,28 +127,32 @@ for sim in simulations:
 
     ###################################################################
     #
-    print(f"Processing Ligament Data for: {sim.label}\n")
-    sim.process_ligaments()
-    sim.grouped_ligaments = sim.group_ligaments_by_level()
-    # plot_ligament_data_summary(sim)
-
-    peak_force, peak_stretch = peak_ligament_values(sim)
-    peak_lig_force_values_dict[sim.label] = peak_force
-    peak_lig_stretch_values_dict[sim.label] = peak_stretch
-
-    plot_individual_ligament_table(peak_lig_force_values_dict, "Ligament Force")
-    plot_individual_ligament_table(peak_lig_stretch_values_dict, "Ligament Stretch")
-
-    print("\n(completed)\n")
-
-
+    # print(f"Processing Ligament Data for: {sim.label}\n")
+    # sim.process_ligaments()
+    # sim.grouped_ligaments = sim.group_ligaments_by_level()
+    # # plot_ligament_data_summary(sim)
+    #
+    # peak_force, peak_stretch = peak_ligament_values(sim)
+    # peak_lig_force_values_dict[sim.label] = peak_force
+    # peak_lig_stretch_values_dict[sim.label] = peak_stretch
+    #
+    # plot_individual_ligament_table(peak_lig_force_values_dict, "Ligament Force")
+    # plot_individual_ligament_table(peak_lig_stretch_values_dict, "Ligament Stretch")
+    #
+    # print("\n(completed)\n")
 
     ###################################################################
 
-    # print(f"Processing Muscle Data for: {sim.label}\n")
-    # sim.process_muscles()
-    # # plot_muscle_data_summary(sim)
-    # print("\n(completed)\n")
+    print(f"Processing Muscle Data for: {sim.label}\n")
+    sim.process_muscles()
+    # plot_muscle_data_summary(sim)
+    print("\n(completed)\n")
+
+    peak_force, peak_stretch = peak_muscle_values(sim)
+    peak_muscle_force_values_dict[sim.label] = peak_force
+    peak_muscle_stretch_values_dict[sim.label] = peak_stretch
+    plot_individual_muscle_table(peak_force, "Muscle Force", sim.label)
+    plot_individual_muscle_table(peak_stretch, "Muscle Stretch", sim.label)
 
 os.chdir(compare_dir_path)
 
@@ -192,10 +199,10 @@ os.chdir(compare_dir_path)
 #     compare_ligament_data(simulations, level)
 # print("\n(completed)\n")
 
-print(f"Comparing Peak Ligament Data")
-lig_force_comparison, lig_stretch_comparison = compare_peak_ligament_values(simulations)
-plot_comparison_ligament_table(lig_force_comparison, "Ligament Force Comparison")
-plot_comparison_ligament_table(lig_stretch_comparison, "Ligament Stretch Comparison")
+# print(f"Comparing Peak Ligament Data")
+# lig_force_comparison, lig_stretch_comparison = compare_peak_ligament_values(simulations)
+# plot_comparison_ligament_table(lig_force_comparison, "Ligament Force Comparison")
+# plot_comparison_ligament_table(lig_stretch_comparison, "Ligament Stretch Comparison")
 #########################################################################################
 
 # print(f"Comparing Muscle Data")
@@ -203,6 +210,9 @@ plot_comparison_ligament_table(lig_stretch_comparison, "Ligament Stretch Compari
 # compare_muscle_data(simulations)
 # print("\n(completed)\n")
 
+muscle_force_comparison, muscle_stretch_comparison = compare_peak_muscle_values(simulations)
+plot_comparison_muscle_table(muscle_force_comparison, "Muscle Force Comparison")
+plot_comparison_muscle_table(muscle_stretch_comparison, "Muscle Stretch Comparison")
 #########################################################################################
 
 # print(f"Comparing NIJ Data")
