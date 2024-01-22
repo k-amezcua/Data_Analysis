@@ -11,7 +11,7 @@ def plot_peak_global_response_table(peak_values):
     table.scale(0.25, 1.5)
     plt.savefig(f'Peak_Global_Response.png')
     df.to_excel('peak_global_response.xlsx')  # Save to Excel
-    plt.show()
+    plt.close()
 
 def plot_peak_global_comparison_table(comparison_dict):
     df = pd.DataFrame(comparison_dict)
@@ -23,7 +23,7 @@ def plot_peak_global_comparison_table(comparison_dict):
     table.scale(0.75, 1.5)
     plt.savefig(f'Global_Response_Comparison.png')
     df.to_excel('global_response_comparison.xlsx')  # Save to Excel
-    plt.show()
+    plt.close()
 
 ################################################################################
 
@@ -50,7 +50,7 @@ def plot_NIJ_table(nij_values_dict):
         plt.title(f'NIJ Values for {sim_label}')
         plt.savefig(f'{sim_label}_NIJ_Values.png')
         df.to_excel(f'{sim_label}_NIJ_Values.xlsx')
-        plt.show()
+        plt.close()
 
 def plot_NIJ_comparison_table(comparison_dict):
     df = pd.DataFrame(comparison_dict).T

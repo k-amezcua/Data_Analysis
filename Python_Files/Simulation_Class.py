@@ -69,10 +69,11 @@ class Simulation:
         for disc_dict in disc_dict_list:
             disc_name = disc_dict['disc_name']
             disc_level = disc_dict['disc_level']
+            disc_region = disc_dict['disc_region']
             disc_file_path = os.path.join(disc_dir_path, disc_name + '_results.txt')
             num_elements = disc_dict['disc_elements']
             disc_variables = disc_dict['disc_variables']
-            discs.append(Disc(disc_name, num_elements, disc_file_path, disc_variables))
+            discs.append(Disc(disc_name, disc_level, disc_region, num_elements, disc_file_path, disc_variables))
         return discs
 
     def set_ligament_paths(self, lig_dir_path, ligament_dict_list):

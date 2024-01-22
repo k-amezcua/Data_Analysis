@@ -1,10 +1,12 @@
 import os
 
 class Disc:
-    def __init__(self, name, num_elements, file_path, disc_variables):
+    def __init__(self, name, disc_level, disc_region, num_elements, file_path, disc_variables):
         import pandas as pd
         self.name = name
         self.num_elements = num_elements
+        self.level = disc_level
+        self.region = disc_region
         self.file_path = file_path
         self.disc_variables = disc_variables
         self.data = pd.DataFrame()
@@ -128,9 +130,9 @@ class Disc:
             # print(sr_df)
 
             # Print the results
-            print(f"Element w/Maximum Value: {max_column_sr}")
-            print(f"Maximum sr Value: {round(max_value_sr/(10**6))}e06")
-            print(f"Time at Maximum sr Value: {round(time_at_max_sr,3)}")
+            # print(f"Element w/Maximum Value: {max_column_sr}")
+            # print(f"Maximum sr Value: {round(max_value_sr/(10**6))}e06")
+            # print(f"Time at Maximum sr Value: {round(time_at_max_sr,3)}")
 
             # Find the column with the greatest value
             max_column_Er = Er_df.iloc[:, 1:].max().idxmax()
@@ -149,9 +151,9 @@ class Disc:
             # print(Er_df)
 
             # Print the results
-            print(f"Element w/Maximum Value: {max_column_Er}")
-            print(f"Maximum Er Value: {max_value_Er}")
-            print(f"Time at Maximum Er Value: {round(time_at_max_Er,3)}\n")
+            # print(f"Element w/Maximum Value: {max_column_Er}")
+            # print(f"Maximum Er Value: {max_value_Er}")
+            # print(f"Time at Maximum Er Value: {round(time_at_max_Er,3)}\n")
 
             # Calculate the average of the first variable (variable 1) across all elements for each row
             s1_average = round((self.data.iloc[:, 1::6].mean(axis=1)),1)
@@ -194,7 +196,5 @@ class Disc:
             # Save the processed data to a CSV file
             csv_file_path = self.file_path.replace('.txt', '.csv')
             self.data.to_csv(csv_file_path, float_format='%.9f')
-
-            # plot_data(self)
 
         pass

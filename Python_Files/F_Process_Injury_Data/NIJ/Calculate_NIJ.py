@@ -90,23 +90,23 @@ def calculate_NIJ(sim, nij_file_path):
     # print(f"NIJ results:\n{Nij_results}\n")
 
 
-    print(f"Minimum Fz: {round((Fz_min),2)}")
-    print(f"Maxmimum Fz: {round((Fz_max),2)}")
-    print(f"Minimum My: {round((My_min),2)}")
-    print(f"Maxmimum My: {round((My_max),2)}\n")
+    # print(f"Minimum Fz: {round((Fz_min),2)}")
+    # print(f"Maxmimum Fz: {round((Fz_max),2)}")
+    # print(f"Minimum My: {round((My_min),2)}")
+    # print(f"Maxmimum My: {round((My_max),2)}\n")
 
     max_NIJ = df['NIJ'].max()
     max_index_NIJ = df['NIJ'].idxmax()
     # # Get the corresponding time value
     time_at_max_NIJ = df.at[max_index_NIJ, 'Sim_Time_s']
-    print(f"Maximum NIJ Value: {round(max_NIJ,3)}")
-    print(f"Time at Maximum NIJ Value: {round(time_at_max_NIJ,3)}")
+    # print(f"Maximum NIJ Value: {round(max_NIJ,3)}")
+    # print(f"Time at Maximum NIJ Value: {round(time_at_max_NIJ,3)}")
     min_NIJ = df['NIJ'].min()
     min_index_NIJ = df['NIJ'].idxmin()
     # # Get the corresponding time value
     time_at_min_NIJ = df.at[min_index_NIJ, 'Sim_Time_s']
-    print(f"Minimum NIJ Value: {round(min_NIJ,3)}")
-    print(f"Time at Minimum NIJ Value: {round(time_at_min_NIJ,3)}")
+    # print(f"Minimum NIJ Value: {round(min_NIJ,3)}")
+    # print(f"Time at Minimum NIJ Value: {round(time_at_min_NIJ,3)}")
 
     # Now you should have the data in a pandas DataFrame.
 

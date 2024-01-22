@@ -1,75 +1,85 @@
 import pandas as pd
 
 def peak_vertebra(sim):
-    # Assuming sim.vertebrae is a DataFrame with your data
-    # Extract peak values and round them to zero decimal places
-
-    peak_rotation_C12 = round(sim.vertebrae['C12_Ry'].max())
-    peak_rotation_C23 = round(sim.vertebrae['C23_Ry'].max())
-    peak_rotation_C34 = round(sim.vertebrae['C34_Ry'].max())
-    peak_rotation_C45 = round(sim.vertebrae['C45_Ry'].max())
-    peak_rotation_C56 = round(sim.vertebrae['C56_Ry'].max())
-    peak_rotation_C67 = round(sim.vertebrae['C67_Ry'].max())
-    peak_rotation_C7T1 = round(sim.vertebrae['C7T1_Ry'].max())
-
-    # Create a dictionary to store these values
-    peak_values = {
-        'C12_Ry': peak_rotation_C12,
-        'C23_Ry': peak_rotation_C23,
-        'C34_Ry': peak_rotation_C34,
-        'C45_Ry': peak_rotation_C45,
-        'C56_Ry': peak_rotation_C56,
-        'C67_Ry': peak_rotation_C67,
-        'C7T1_Ry': peak_rotation_C7T1
-    }
-
+    peak_values = {}
+    for column in sim.vertebrae.columns:
+        max_value = sim.vertebrae[column].max()
+        time_at_max = sim.vertebrae[sim.vertebrae[column] == max_value].index[0]
+        peak_values[column + " (degrees)"] = [round(max_value), round(time_at_max)]
     return peak_values
+
 def compare_peak_vertebra(simulations):
-    # Create a dictionary to store peak values for each simulation
-    all_peak_values = {}
-
-    # Loop through each simulation and calculate peak values
+    comparison = {}
     for sim in simulations:
-        all_peak_values[sim.label] = peak_vertebra(sim)
-
-    # Convert the dictionary to a DataFrame for comparison
-    comparison_df = pd.DataFrame(all_peak_values)
-
-    # Transpose the DataFrame to list data vertically
-    comparison_df = comparison_df.T
-
-    # Round the values to zero decimal places
-    comparison_df = comparison_df.round(0)
-
+        peak_values = peak_vertebra(sim)
+        comparison[sim.label] = peak_values
+    # Convert the dictionary to a DataFrame for easier manipulation and plotting
+    comparison_df = pd.DataFrame.from_dict(comparison, orient='index')
     return comparison_df
+
+
+########################################################################################################################
+def peak_disc_values(sim):
+    peak_stress_values = {}
+    peak_strain_values = {}
+
+    for disc in sim.discs:
+        disc_level = disc.level
+        disc_region = disc.region
+        disc_data = disc.data
+
+        # Stress
+        max_sr = disc_data['max_sr'].max() / 1e6  # Convert to MPa
+        time_at_max_sr = disc_data[disc_data['max_sr'] == disc_data['max_sr'].max()].index[0]
+        peak_stress_values[f'{disc_level}_{disc_region}'] = [f"{round(max_sr)} MPa, {time_at_max_sr} ms"]
+
+        # Strain
+        max_er = disc_data['max_Er'].max()
+        time_at_max_er = disc_data[disc_data['max_Er'] == disc_data['max_Er'].max()].index[0]
+        peak_strain_values[f'{disc_level}_{disc_region}'] = [f"{round(max_er, 2)} mm/mm, {time_at_max_er} ms"]
+
+    return peak_stress_values, peak_strain_values
+
+def compare_peak_disc_values(simulations):
+    comparison_stress = {}
+    comparison_strain = {}
+
+    for sim in simulations:
+        peak_stress, peak_strain = peak_disc_values(sim)
+        comparison_stress[sim.label] = peak_stress
+        comparison_strain[sim.label] = peak_strain
+
+    return comparison_stress, comparison_strain
 
 ########################################################################################################################
 
-def peak_disc_values(simulation):
-    # Assuming simulation.discs is a list of Disc objects with processed data
-    peak_values = []
-    for disc in simulation.discs:
-        peak_stress = disc.data['stress'].max()
-        peak_strain = disc.data['strain'].max()
-        peak_values.append({'Disc': disc.name, 'Peak Stress': peak_stress, 'Peak Strain': peak_strain})
-    return pd.DataFrame(peak_values)
+def peak_ligament_values(sim):
+    peak_force_values = {}
+    peak_stretch_values = {}
 
-def peak_ligament_values(simulation):
-    # Similar to peak_disc_values, but for ligaments
-    peak_values = []
-    for ligament in simulation.ligaments:
-        peak_stress = ligament.data['stress'].max()
-        peak_strain = ligament.data['strain'].max()
-        peak_values.append({'Ligament': ligament.name, 'Peak Stress': peak_stress, 'Peak Strain': peak_strain})
-    return pd.DataFrame(peak_values)
+    for ligament in sim.ligaments:
+        ligament_name = ligament.name
+        ligament_data = ligament.data
 
-def peak_muscle_values(simulation):
-    # Similar to peak_ligament_values, but for muscles
-    peak_values = []
-    for muscle in simulation.muscles:
-        peak_stress = muscle.data['stress'].max()
-        peak_strain = muscle.data['strain'].max()
-        peak_values.append({'Muscle': muscle.name, 'Peak Stress': peak_stress, 'Peak Strain': peak_strain})
-    return pd.DataFrame(peak_values)
+        # Force
+        max_fr = ligament_data['Fr'].max()
+        time_at_max_fr = ligament_data[ligament_data['Fr'] == max_fr].index[0]
+        peak_force_values[ligament_name] = [f"{round(max_fr)} N, {time_at_max_fr} ms"]
 
-# You can add more functions if needed for other tissues
+        # Stretch
+        max_stretch = ligament_data['stretch'].max()
+        time_at_max_stretch = ligament_data[ligament_data['stretch'] == max_stretch].index[0]
+        peak_stretch_values[ligament_name] = [f"{round(max_stretch, 2)}, {time_at_max_stretch} ms"]
+
+    return peak_force_values, peak_stretch_values
+
+def compare_peak_ligament_values(simulations):
+    comparison_force = {}
+    comparison_stretch = {}
+
+    for sim in simulations:
+        peak_force, peak_stretch = peak_ligament_values(sim)
+        comparison_force[sim.label] = peak_force
+        comparison_stretch[sim.label] = peak_stretch
+
+    return comparison_force, comparison_stretch

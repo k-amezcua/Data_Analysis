@@ -3,31 +3,33 @@ def create_dictionaries():
     disc_variables = ['Time', 's1', 's2', 's3', 'E1', 'E2', 'E3']
 
     disc_dict_list = [
-        {'disc_name': 'C23_Anterior_Disc', 'disc_elements': 120},
-        {'disc_name': 'C23_Posterior_Disc', 'disc_elements': 120},
-        {'disc_name': 'C23_Middle_Disc', 'disc_elements': 240},
-        {'disc_name': 'C34_Anterior_Disc', 'disc_elements': 144},
-        {'disc_name': 'C34_Posterior_Disc', 'disc_elements': 144},
-        {'disc_name': 'C34_Middle_Disc', 'disc_elements': 288},
-        {'disc_name': 'C45_Anterior_Disc', 'disc_elements': 168},
-        {'disc_name': 'C45_Posterior_Disc', 'disc_elements': 168},
-        {'disc_name': 'C45_Middle_Disc', 'disc_elements': 336},
-        {'disc_name': 'C56_Anterior_Disc', 'disc_elements': 144},
-        {'disc_name': 'C56_Posterior_Disc', 'disc_elements': 144},
-        {'disc_name': 'C56_Middle_Disc', 'disc_elements': 288},
-        {'disc_name': 'C67_Anterior_Disc', 'disc_elements': 120},
-        {'disc_name': 'C67_Posterior_Disc', 'disc_elements': 120},
-        {'disc_name': 'C67_Middle_Disc', 'disc_elements': 240},
-        {'disc_name': 'C7T1_Anterior_Disc', 'disc_elements': 144},
-        {'disc_name': 'C7T1_Posterior_Disc', 'disc_elements': 144},
-        {'disc_name': 'C7T1_Middle_Disc', 'disc_elements': 288}
+        {'disc_name': 'C23_Anterior_Disc', 'disc_elements': 120, 'disc_region': 'anterior'},
+        {'disc_name': 'C23_Posterior_Disc', 'disc_elements': 120, 'disc_region': 'posterior'},
+        {'disc_name': 'C23_Middle_Disc', 'disc_elements': 240, 'disc_region': 'middle'},
+        {'disc_name': 'C34_Anterior_Disc', 'disc_elements': 144, 'disc_region': 'anterior'},
+        {'disc_name': 'C34_Posterior_Disc', 'disc_elements': 144, 'disc_region': 'posterior'},
+        {'disc_name': 'C34_Middle_Disc', 'disc_elements': 288, 'disc_region': 'middle'},
+        {'disc_name': 'C45_Anterior_Disc', 'disc_elements': 168, 'disc_region': 'anterior'},
+        {'disc_name': 'C45_Posterior_Disc', 'disc_elements': 168, 'disc_region': 'posterior'},
+        {'disc_name': 'C45_Middle_Disc', 'disc_elements': 336, 'disc_region': 'middle'},
+        {'disc_name': 'C56_Anterior_Disc', 'disc_elements': 144, 'disc_region': 'anterior'},
+        {'disc_name': 'C56_Posterior_Disc', 'disc_elements': 144, 'disc_region': 'posterior'},
+        {'disc_name': 'C56_Middle_Disc', 'disc_elements': 288, 'disc_region': 'middle'},
+        {'disc_name': 'C67_Anterior_Disc', 'disc_elements': 120, 'disc_region': 'anterior'},
+        {'disc_name': 'C67_Posterior_Disc', 'disc_elements': 120, 'disc_region': 'posterior'},
+        {'disc_name': 'C67_Middle_Disc', 'disc_elements': 240, 'disc_region': 'middle'},
+        {'disc_name': 'C7T1_Anterior_Disc', 'disc_elements': 144, 'disc_region': 'anterior'},
+        {'disc_name': 'C7T1_Posterior_Disc', 'disc_elements': 144, 'disc_region': 'posterior'},
+        {'disc_name': 'C7T1_Middle_Disc', 'disc_elements': 288, 'disc_region': 'middle'}
     ]
 
     for disc_dict in disc_dict_list:
         disc_name = disc_dict['disc_name']
-        disc_level = disc_name.split('_')[0]  # Assuming the level is the part before the first '_'
+        disc_level = disc_name.split('_')[0]
+        disc_region = disc_dict['disc_region'] # Assuming the level is the part before the first '_'
         disc_dict['disc_level'] = disc_level
         disc_dict['disc_variables'] = disc_variables
+        disc_dict['disc_region'] = disc_region
 
     # Define ligament information
     ligament_dict_list = [
