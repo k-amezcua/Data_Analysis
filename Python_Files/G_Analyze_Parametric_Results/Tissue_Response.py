@@ -62,14 +62,14 @@ def peak_ligament_values(sim):
         ligament_data = ligament.data
 
         # Force
-        max_fr = ligament_data['Fr'].max()
-        time_at_max_fr = ligament_data[ligament_data['Fr'] == max_fr].index[0]
-        peak_force_values[ligament_name] = [f"{round(max_fr)} N, {time_at_max_fr} ms"]
+        max_force = ligament_data[f'{ligament_name}_Fr'].max()
+        time_at_max_force = ligament_data[ligament_data[f'{ligament_name}_Fr'] == max_force].index[0]
+        peak_force_values[ligament_name] = [round(max_force), round(time_at_max_force)]
 
         # Stretch
-        max_stretch = ligament_data['stretch'].max()
-        time_at_max_stretch = ligament_data[ligament_data['stretch'] == max_stretch].index[0]
-        peak_stretch_values[ligament_name] = [f"{round(max_stretch, 2)}, {time_at_max_stretch} ms"]
+        max_stretch = ligament_data[f'{ligament_name}_stretch'].max()
+        time_at_max_stretch = ligament_data[ligament_data[f'{ligament_name}_stretch'] == max_stretch].index[0]
+        peak_stretch_values[ligament_name] = [round(max_stretch, 2), round(time_at_max_stretch)]
 
     return peak_force_values, peak_stretch_values
 

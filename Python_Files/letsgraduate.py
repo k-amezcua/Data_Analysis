@@ -51,6 +51,8 @@ exp_kinematic_data = set_literature_data()
 ########################################################################################################################
 from G_Analyze_Parametric_Results.Compare_Kinematics import compare_kinematic_data
 from C_Process_Disc_Data.Plot_Disc_Data import plot_disc_data, plot_disc_data_summary
+from G_Analyze_Parametric_Results.Tissue_Response import peak_ligament_values, compare_peak_ligament_values
+from G_Analyze_Parametric_Results.Plot_Tissue_Response_Tables import plot_individual_ligament_table, plot_comparison_ligament_table
 
 from H_CORA_Analysis.Process_Simulations_for_CORA import pre_process_sim_for_cora
 from G_Analyze_Parametric_Results.Global_Response import determine_NIJ, compare_NIJ
@@ -66,10 +68,13 @@ nij_values_dict = {}
 peak_vertebra_values_dict = {}
 peak_global_response_dict = {}
 peak_disc_values_dict = {}
-peak_stress_values_dict = {}
-peak_strain_values_dict = {}
+peak_muscle_stress_values_dict = {}
+peak_muscle_strain_values_dict = {}
+peak_lig_force_values_dict = {}
+peak_lig_stretch_values_dict = {}
 
 for sim in simulations:
+
     # print(f"Processing Kinematic Data for: {sim.label} ---------------------------------------------------------------")
     # sim.process_kinematics()
     # pre_process_sim_for_cora(sim)
@@ -111,19 +116,29 @@ for sim in simulations:
     # print("(completed)\n")
     #
     # peak_stress, peak_strain = peak_disc_values(sim)
-    # peak_stress_values_dict[sim.label] = peak_stress
-    # peak_strain_values_dict[sim.label] = peak_strain
+    # peak_muscle_stress_values_dict[sim.label] = peak_stress
+    # peak_muscle_strain_values_dict[sim.label] = peak_strain
 
-    # plot_disc_stress_table(peak_stress_values_dict)
-    # plot_disc_strain_table(peak_strain_values_dict)
+    # plot_disc_stress_table(peak_muscle_stress_values_dict)
+    # plot_disc_strain_table(peak_muscle_strain_values_dict)
 
     ###################################################################
     #
-    # print(f"Processing Ligament Data for: {sim.label}\n")
-    # sim.process_ligaments()
-    # sim.grouped_ligaments = sim.group_ligaments_by_level()
-    # # plot_ligament_data_summary(sim)
-    # print("\n(completed)\n")
+    print(f"Processing Ligament Data for: {sim.label}\n")
+    sim.process_ligaments()
+    sim.grouped_ligaments = sim.group_ligaments_by_level()
+    # plot_ligament_data_summary(sim)
+
+    peak_force, peak_stretch = peak_ligament_values(sim)
+    peak_lig_force_values_dict[sim.label] = peak_force
+    peak_lig_stretch_values_dict[sim.label] = peak_stretch
+
+    plot_individual_ligament_table(peak_lig_force_values_dict, "Ligament Force")
+    plot_individual_ligament_table(peak_lig_stretch_values_dict, "Ligament Stretch")
+
+    print("\n(completed)\n")
+
+
 
     ###################################################################
 
@@ -136,6 +151,10 @@ os.chdir(compare_dir_path)
 
 #########################################################################################
 
+# print(f"Comparing Kinematic Data")
+# compare_kinematic_data(simulations, exp_kinematic_data)
+# print("\n(completed)\n")
+
 # print(f"Comparing Peak Global Response")
 #
 # nij_comparison = compare_NIJ(simulations)
@@ -143,31 +162,29 @@ os.chdir(compare_dir_path)
 #
 # global_comparison = compare_peak_global_response(simulations)
 # plot_peak_global_comparison_table(global_comparison)
-#
-# #########################################################################################
-#
+
+#########################################################################################
+
+# print(f"Comparing Vertebral Data")
+# compare_vertebral_data(simulations, exp_kinematic_data['panzer_vertebral_data'])
+# print("\n(completed)\n")
+
 # print(f"Comparing Peak Vertebral Rotations")
 # vertebral_comparison_df = compare_peak_vertebra(simulations)
 # plot_vertebra_comparison_table(vertebral_comparison_df)
 
 #########################################################################################
 
-# print(f"Comparing Peak Disc Data")
-# stress_comparison, strain_comparison = compare_peak_disc_values(simulations)
-# plot_disc_comparison_table(stress_comparison, "Stress")
-# plot_disc_comparison_table(strain_comparison, "Strain")
-
-# print(f"Comparing Kinematic Data")
-# compare_kinematic_data(simulations, exp_kinematic_data)
-# print("\n(completed)\n")
-#
-# print(f"Comparing Vertebral Data")
-# compare_vertebral_data(simulations, exp_kinematic_data['panzer_vertebral_data'])
-# print("\n(completed)\n")
-
 # print(f"Comparing Disc Data")
 # compare_disc_data(simulations)
 # print("\n(completed)\n")
+
+# print(f"Comparing Peak Disc Data")
+# disc_stress_comparison, disc_strain_comparison = compare_peak_disc_values(simulations)
+# plot_disc_comparison_table(disc_stress_comparison, "Stress")
+# plot_disc_comparison_table(disc_strain_comparison, "Strain")
+
+#########################################################################################
 
 # print(f"Comparing Ligament Data")
 # # Call the function in your main script
@@ -175,15 +192,28 @@ os.chdir(compare_dir_path)
 #     compare_ligament_data(simulations, level)
 # print("\n(completed)\n")
 
+print(f"Comparing Peak Ligament Data")
+lig_force_comparison, lig_stretch_comparison = compare_peak_ligament_values(simulations)
+plot_comparison_ligament_table(lig_force_comparison, "Ligament Force Comparison")
+plot_comparison_ligament_table(lig_stretch_comparison, "Ligament Stretch Comparison")
+#########################################################################################
+
 # print(f"Comparing Muscle Data")
 # # Call the function in your main script
 # compare_muscle_data(simulations)
 # print("\n(completed)\n")
 
+#########################################################################################
+
 # print(f"Comparing NIJ Data")
 # # Call the function in your main script
 # compare_nij_data(simulations)
 # print("\n(completed)\n")
+
+# #########################################################################################
+
+
+
 
 
 
