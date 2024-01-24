@@ -80,9 +80,10 @@ class Simulation:
         ligaments = []
         for lig_dict in ligament_dict_list:
             lig_name = lig_dict['ligament_name']
+            lig_failure_force = lig_dict['failure_force']
             lig_file_path = os.path.join(lig_dir_path, lig_name + '_results.txt')
             num_elements = lig_dict['ligament_elements']
-            ligaments.append(Ligament(lig_name, num_elements, lig_file_path))
+            ligaments.append(Ligament(lig_name,lig_failure_force, num_elements, lig_file_path))
         return ligaments
 
     def set_muscle_paths(self, musc_dir_path, muscle_dict_list):

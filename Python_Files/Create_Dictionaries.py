@@ -31,50 +31,67 @@ def create_dictionaries():
         disc_dict['disc_variables'] = disc_variables
         disc_dict['disc_region'] = disc_region
 
+    ALL_failure_force = 354.3
+    PLL_failure_force = 339.2
+    LF_failure_force = 246.7
+    ISL_failure_force = 66.1
+    JC_failure_force = 190
+    AAOM_failure_force = 1024
+    PAOM_failure_force = 354
+    C01_JC_failure_force = 1186
+    C12_JC_failure_force = 662
+    Apical_failure_force = 251.5
+    Alar_failure_force = 251.5
+    VC_failure_force = 251.5
+    TM_failure_force = 251.5
+    TL_failure_force = 392
+    AAAM_failure_force = 1068
+    PAAM_failure_force = 97
+
     # Define ligament information
     ligament_dict_list = [
-        {'ligament_name': 'C01_AAOM', 'ligament_elements': 4},
-        {'ligament_name': 'C01_JC', 'ligament_elements': 26},
-        {'ligament_name': 'C01_PAOM', 'ligament_elements': 4},
-        {'ligament_name': 'C02_ALAR', 'ligament_elements': 2},
-        {'ligament_name': 'C02_APICAL', 'ligament_elements': 1},
-        {'ligament_name': 'C02_TM', 'ligament_elements': 1},
-        {'ligament_name': 'C02_TM_VC', 'ligament_elements': 4},
-        {'ligament_name': 'C12_AAAM', 'ligament_elements': 6},
-        {'ligament_name': 'C12_ISL', 'ligament_elements': 4},
-        {'ligament_name': 'C12_JC', 'ligament_elements': 16},
-        {'ligament_name': 'C12_PAAM', 'ligament_elements': 8},
-        {'ligament_name': 'C12_TL', 'ligament_elements': 4},
-        {'ligament_name': 'C23_ALL', 'ligament_elements': 4},
-        {'ligament_name': 'C23_ISL', 'ligament_elements': 4},
-        {'ligament_name': 'C23_JC', 'ligament_elements': 16},
-        {'ligament_name': 'C23_LF', 'ligament_elements': 8},
-        {'ligament_name': 'C23_PLL', 'ligament_elements': 4},
-        {'ligament_name': 'C34_ALL', 'ligament_elements': 4},
-        {'ligament_name': 'C34_ISL', 'ligament_elements': 4},
-        {'ligament_name': 'C34_JC', 'ligament_elements': 16},
-        {'ligament_name': 'C34_LF', 'ligament_elements': 8},
-        {'ligament_name': 'C34_PLL', 'ligament_elements': 4},
-        {'ligament_name': 'C45_ALL', 'ligament_elements': 4},
-        {'ligament_name': 'C45_ISL', 'ligament_elements': 4},
-        {'ligament_name': 'C45_JC', 'ligament_elements': 16},
-        {'ligament_name': 'C45_LF', 'ligament_elements': 8},
-        {'ligament_name': 'C45_PLL', 'ligament_elements': 4},
-        {'ligament_name': 'C56_ALL', 'ligament_elements': 4},
-        {'ligament_name': 'C56_ISL', 'ligament_elements': 4},
-        {'ligament_name': 'C56_JC', 'ligament_elements': 16},
-        {'ligament_name': 'C56_LF', 'ligament_elements': 8},
-        {'ligament_name': 'C56_PLL', 'ligament_elements': 4},
-        {'ligament_name': 'C67_ALL', 'ligament_elements': 4},
-        {'ligament_name': 'C67_ISL', 'ligament_elements': 4},
-        {'ligament_name': 'C67_JC', 'ligament_elements': 16},
-        {'ligament_name': 'C67_LF', 'ligament_elements': 8},
-        {'ligament_name': 'C67_PLL', 'ligament_elements': 4},
-        {'ligament_name': 'C7T1_ALL', 'ligament_elements': 4},
-        {'ligament_name': 'C7T1_ISL', 'ligament_elements': 4},
-        {'ligament_name': 'C7T1_JC', 'ligament_elements': 16},
-        {'ligament_name': 'C7T1_LF', 'ligament_elements': 8},
-        {'ligament_name': 'C7T1_PLL', 'ligament_elements': 4}
+        {'ligament_name': 'C01_AAOM', 'ligament_elements': 4, 'failure_force': AAOM_failure_force},
+        {'ligament_name': 'C01_JC', 'ligament_elements': 26, 'failure_force': C01_JC_failure_force},
+        {'ligament_name': 'C01_PAOM', 'ligament_elements': 4, 'failure_force': PAOM_failure_force},
+        {'ligament_name': 'C02_ALAR', 'ligament_elements': 2, 'failure_force': Alar_failure_force},
+        {'ligament_name': 'C02_APICAL', 'ligament_elements': 1, 'failure_force': Apical_failure_force},
+        {'ligament_name': 'C02_TM', 'ligament_elements': 1, 'failure_force': TM_failure_force},
+        {'ligament_name': 'C02_TM_VC', 'ligament_elements': 4, 'failure_force': VC_failure_force},
+        {'ligament_name': 'C12_AAAM', 'ligament_elements': 6, 'failure_force': AAAM_failure_force},
+        {'ligament_name': 'C12_ISL', 'ligament_elements': 4, 'failure_force': ISL_failure_force},
+        {'ligament_name': 'C12_JC', 'ligament_elements': 16, 'failure_force': C12_JC_failure_force},
+        {'ligament_name': 'C12_PAAM', 'ligament_elements': 8, 'failure_force': PAAM_failure_force},
+        {'ligament_name': 'C12_TL', 'ligament_elements': 4, 'failure_force': TL_failure_force},
+        {'ligament_name': 'C23_ALL', 'ligament_elements': 4, 'failure_force': ALL_failure_force},
+        {'ligament_name': 'C23_ISL', 'ligament_elements': 4, 'failure_force': ISL_failure_force},
+        {'ligament_name': 'C23_JC', 'ligament_elements': 16, 'failure_force': JC_failure_force},
+        {'ligament_name': 'C23_LF', 'ligament_elements': 8, 'failure_force': LF_failure_force},
+        {'ligament_name': 'C23_PLL', 'ligament_elements': 4, 'failure_force': PLL_failure_force},
+        {'ligament_name': 'C34_ALL', 'ligament_elements': 4, 'failure_force': ALL_failure_force},
+        {'ligament_name': 'C34_ISL', 'ligament_elements': 4, 'failure_force': ISL_failure_force},
+        {'ligament_name': 'C34_JC', 'ligament_elements': 16, 'failure_force': JC_failure_force},
+        {'ligament_name': 'C34_LF', 'ligament_elements': 8, 'failure_force': LF_failure_force},
+        {'ligament_name': 'C34_PLL', 'ligament_elements': 4, 'failure_force': PLL_failure_force},
+        {'ligament_name': 'C45_ALL', 'ligament_elements': 4, 'failure_force': ALL_failure_force},
+        {'ligament_name': 'C45_ISL', 'ligament_elements': 4, 'failure_force': ISL_failure_force},
+        {'ligament_name': 'C45_JC', 'ligament_elements': 16, 'failure_force': JC_failure_force},
+        {'ligament_name': 'C45_LF', 'ligament_elements': 8, 'failure_force': LF_failure_force},
+        {'ligament_name': 'C45_PLL', 'ligament_elements': 4, 'failure_force': PLL_failure_force},
+        {'ligament_name': 'C56_ALL', 'ligament_elements': 4, 'failure_force': ALL_failure_force},
+        {'ligament_name': 'C56_ISL', 'ligament_elements': 4, 'failure_force': ISL_failure_force},
+        {'ligament_name': 'C56_JC', 'ligament_elements': 16, 'failure_force': JC_failure_force},
+        {'ligament_name': 'C56_LF', 'ligament_elements': 8, 'failure_force': LF_failure_force},
+        {'ligament_name': 'C56_PLL', 'ligament_elements': 4, 'failure_force': PLL_failure_force},
+        {'ligament_name': 'C67_ALL', 'ligament_elements': 4, 'failure_force': ALL_failure_force},
+        {'ligament_name': 'C67_ISL', 'ligament_elements': 4, 'failure_force': ISL_failure_force},
+        {'ligament_name': 'C67_JC', 'ligament_elements': 16, 'failure_force': JC_failure_force},
+        {'ligament_name': 'C67_LF', 'ligament_elements': 8, 'failure_force': LF_failure_force},
+        {'ligament_name': 'C67_PLL', 'ligament_elements': 4, 'failure_force': PLL_failure_force},
+        {'ligament_name': 'C7T1_ALL', 'ligament_elements': 4, 'failure_force': ALL_failure_force},
+        {'ligament_name': 'C7T1_ISL', 'ligament_elements': 4, 'failure_force': ISL_failure_force},
+        {'ligament_name': 'C7T1_JC', 'ligament_elements': 16, 'failure_force': JC_failure_force},
+        {'ligament_name': 'C7T1_LF', 'ligament_elements': 8, 'failure_force': LF_failure_force},
+        {'ligament_name': 'C7T1_PLL', 'ligament_elements': 4, 'failure_force': PLL_failure_force}
         # Add more ligament information as needed
     ]
 
