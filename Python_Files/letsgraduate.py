@@ -12,8 +12,8 @@ dir_paths = [
                 # r"C:\Users\kryst\Desktop\THESIS\00 Parameter Study\Troubleshooting\LOA Testing - 0pt2, 74 ms, FE",
                 # r"C:\Users\kryst\Desktop\THESIS\00 Parameter Study\Troubleshooting\LOA Testing - 1pt0, 74 ms, FE",
                 # r"C:\Users\kryst\Desktop\THESIS\00 Parameter Study\1pt0 max muscle force\Active\74 ms delay\Active - Flexors and Extensors",
-                r"C:\Users\kryst\Desktop\THESIS\00 Parameter Study\1pt0 max muscle force\Passive",
-                # r"C:\Users\kryst\Desktop\THESIS\00 Parameter Study\1pt0 max muscle force\Active\74 ms delay\Active - Flexors and Extensors\smaller_time_step",
+                # r"C:\Users\kryst\Desktop\THESIS\00 Parameter Study\1pt0 max muscle force\Passive",
+                r"C:\Users\kryst\Desktop\THESIS\00 Parameter Study\1pt0 max muscle force\Active\74 ms delay\Active - Flexors and Extensors\smaller_time_step",
                 # r"C:\Users\kryst\Desktop\THESIS\00 Parameter Study\1pt0 max muscle force\Active\74 ms delay\Active - Flexors and Extensors\smaller_time_step\slightly_large_step"
                 # add more paths as needed
 ]
@@ -24,8 +24,8 @@ datalabels = [
                 # "0pt2_mmf_new_LOA",
                 # "1pt0_mmf_new_LOA",
                 # "1pt0_mmf_prior_LOA",
-                "passive",
-                # "1pt0_mmf_prior_LOA_small_step",
+                # "passive",
+                "1pt0_mmf_prior_LOA_small_step",
                 # "1pt0_mmf_prior_LOA_larger_step"
                 # Add more datalabels as needed
 ]
@@ -35,14 +35,15 @@ datalabels = [
 
 from Create_Dictionaries import create_dictionaries
 disc_dict_list, ligament_dict_list, muscle_dict_list = create_dictionaries()
-
+from H_CORA_Analysis.Process_Simulations_for_CORA import pre_process_sim_for_cora
+from H_CORA_Analysis.Process_NBDL_for_CORA import pre_process_NBDL_for_cora
 ########################################################################################################################
 # Collect NBDL & Literature Data
 
 from Python_Files.A_Process_NBDL_Data.Set_Literature_Data import set_literature_data
 
 exp_kinematic_data = set_literature_data()
-# pre_process_NBDL_for_cora(exp_kinematic_data)
+pre_process_NBDL_for_cora(exp_kinematic_data)
 # print('processed NBDL data for CORA\n')
 
 

@@ -57,8 +57,8 @@ BEGIN LOADCASE
 #  ../data/0pt2_mmf_new_LOA_sim_head_y_rot_accel.dat   0.0  m-kg-s  YES
 #  ../data/1pt0_mmf_new_LOA_sim_head_y_rot_accel.dat   0.0  m-kg-s  YES
 #  ../data/1pt0_mmf_prior_LOA_sim_head_y_rot_accel.dat   0.0  m-kg-s  YES
-  ../data/passive_sim_head_y_rot_accel.dat   0.0  m-kg-s  YES
-#  ../data/1pt0_mmf_prior_LOA_small_step_sim_head_y_rot_accel.dat   0.0  m-kg-s  YES
+#  ../data/passive_sim_head_y_rot_accel.dat   0.0  m-kg-s  YES
+  ../data/1pt0_mmf_prior_LOA_small_step_sim_head_y_rot_accel.dat   0.0  m-kg-s  YES
 
 # .at file:
 # ../data/exp_stdev_head_y_rot_accel_4_curves.at
