@@ -56,7 +56,7 @@ class Ligament:
                 [f'E{i}_{metric}' for i in range(1, self.num_elements + 1)]].sum(axis=1)
             self.data[f'{self.name}_stretch'] = self.data[
                 [f'E{i}_stretch' for i in range(1, self.num_elements + 1)]].mean(axis=1)
-        self.data[f'{self.d}_Fres'] = (self.data[f'{self.name}_Fy'] ** 2 + self.data[f'{self.name}_Fz'] ** 2) ** 0.5
+        self.data[f'{self.name}_Fres'] = (self.data[f'{self.name}_Fy'] ** 2 + self.data[f'{self.name}_Fz'] ** 2) ** 0.5
 
         # Save to CSV
         csv_path = os.path.splitext(self.file_path)[0] + ".csv"

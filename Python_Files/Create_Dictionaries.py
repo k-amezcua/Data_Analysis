@@ -129,4 +129,7 @@ def create_dictionaries():
         {'muscle_name': 'Trapezius', 'muscle_group': 'extensor', 'muscle_elements': 16},
     ]
 
+    for muscle_dict in muscle_dict_list:
+        muscle_dict['failure_strain'] = 0.30
+
     return disc_dict_list, ligament_dict_list, muscle_dict_list

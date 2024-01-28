@@ -5,9 +5,10 @@ import pandas as pd
 from E_Process_Muscle_Data.Plot_Muscle_Data import plot_muscle_data, plot_muscle_data_summary
 
 class Muscle:
-    def __init__(self, name, muscle_group, num_elements, file_path):
+    def __init__(self, name, muscle_group, musc_failure_strain, num_elements, file_path):
         self.name = name
         self.muscle_group = muscle_group
+        self.failure_strain = musc_failure_strain
         self.num_elements = num_elements
         self.file_path = file_path
         self.data = pd.DataFrame()

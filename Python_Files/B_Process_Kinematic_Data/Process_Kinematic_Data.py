@@ -99,6 +99,7 @@ def process_kinematic_data(simulation, kin_file_path, average_data, low_data, hi
                       pd.Series(T1_vx_tracker, name='T1_vx'),
                       pd.Series(T1_wy_tracker, name='T1_wy'), pd.Series(T1_aRy_tracker, name='T1_aRy')], axis=1)
 
+    data['Sim_Time_s'] = data['Sim_Time_s'] /10
     data['Head_Dx'] = data['Head_Dx'] * 1000
     data['Head_Dz'] = data['Head_Dz'] * 1000
     data['Head_aDx'] = data['Head_aDx'] / 9.80665

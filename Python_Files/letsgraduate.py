@@ -12,7 +12,7 @@ dir_paths = [
                 # r"C:\Users\kryst\Desktop\THESIS\00 Parameter Study\Troubleshooting\LOA Testing - 0pt2, 74 ms, FE",
                 # r"C:\Users\kryst\Desktop\THESIS\00 Parameter Study\Troubleshooting\LOA Testing - 1pt0, 74 ms, FE",
                 # r"C:\Users\kryst\Desktop\THESIS\00 Parameter Study\1pt0 max muscle force\Active\74 ms delay\Active - Flexors and Extensors",
-                # r"C:\Users\kryst\Desktop\THESIS\00 Parameter Study\1pt0 max muscle force\Passive",
+                r"C:\Users\kryst\Desktop\THESIS\00 Parameter Study\1pt0 max muscle force\Passive",
                 r"C:\Users\kryst\Desktop\THESIS\00 Parameter Study\1pt0 max muscle force\Active\74 ms delay\Active - Flexors and Extensors\smaller_time_step",
                 # r"C:\Users\kryst\Desktop\THESIS\00 Parameter Study\1pt0 max muscle force\Active\74 ms delay\Active - Flexors and Extensors\smaller_time_step\slightly_large_step"
                 # add more paths as needed
@@ -24,7 +24,7 @@ datalabels = [
                 # "0pt2_mmf_new_LOA",
                 # "1pt0_mmf_new_LOA",
                 # "1pt0_mmf_prior_LOA",
-                # "passive",
+                "passive",
                 "1pt0_mmf_prior_LOA_small_step",
                 # "1pt0_mmf_prior_LOA_larger_step"
                 # Add more datalabels as needed
@@ -50,6 +50,9 @@ pre_process_NBDL_for_cora(exp_kinematic_data)
 ########################################################################################################################
 # Process & Plot Data for Each Simulation
 ########################################################################################################################
+
+
+
 from G_Analyze_Parametric_Results.Compare_Data.Discs.Compare_Disc_Data import compare_disc_data
 from G_Analyze_Parametric_Results.Compare_Data.Kinematics.Compare_Kinematics import compare_kinematic_data
 from G_Analyze_Parametric_Results.Compare_Data.Ligaments.Compare_Ligament_Data import compare_ligament_data
@@ -63,9 +66,10 @@ from G_Analyze_Parametric_Results.Compare_Injury_Potential.Peak_Muscles.Peak_Mus
 from G_Analyze_Parametric_Results.Compare_Injury_Potential.Peak_Muscles.Plot_Peak_Muscle_response import plot_comparison_muscle_table, plot_individual_muscle_table
 from G_Analyze_Parametric_Results.Compare_Injury_Potential.Peak_Kinematics.Peak_Kinematics_Response import determine_peak_global_response, compare_peak_global_response
 from G_Analyze_Parametric_Results.Compare_Injury_Potential.Peak_Kinematics.Plot_Kinematics_Response import plot_peak_global_response_table, plot_peak_global_comparison_table
+from G_Analyze_Parametric_Results.Compare_Data.HIC.Compare_HIC_Data import plot_HIC_comparison, plot_individual_HIC, compare_HIC
 from G_Analyze_Parametric_Results.Compare_Injury_Potential.Peak_Discs.Peak_Disc_Response import peak_disc_values, compare_peak_disc_values
 from G_Analyze_Parametric_Results.Compare_Injury_Potential.Peak_Discs.Plot_Peak_Disc_Response import plot_disc_strain_table, plot_disc_stress_table, plot_disc_comparison_table
-from G_Analyze_Parametric_Results.Compare_Injury_Potential.Peak_NIJ.Peak_NIJ_Response import compare_NIJ
+from G_Analyze_Parametric_Results.Compare_Injury_Potential.Peak_NIJ.Peak_NIJ_Response import compare_NIJ, determine_NIJ
 from G_Analyze_Parametric_Results.Compare_Injury_Potential.Peak_NIJ.Plot_NIJ_Response import plot_NIJ_table, plot_NIJ_comparison_table
 from G_Analyze_Parametric_Results.Compare_Injury_Potential.Peak_Vertebral.Peak_Vertebral_Response import peak_vertebra,compare_peak_vertebra
 from G_Analyze_Parametric_Results.Compare_Injury_Potential.Peak_Vertebral.Plot_Vertebral_Response import plot_peak_vertebra_table,plot_vertebra_comparison_table
@@ -84,25 +88,39 @@ peak_lig_stretch_values_dict = {}
 peak_muscle_force_values_dict = {}
 peak_muscle_stretch_values_dict = {}
 
+nij_injury_criteria = {
+    'Fz_tension': 6806,  # Reference value for Fz in Newtons
+    'Fz_compression': -6160,
+    'My_extension': -135,   # Reference value for My in Newton-meters
+    'My_flexion': 310,
+    'NIJ': 1.0   # Reference value for NIJ
+}
+
+hic_injury_criteria = 1000
+
 for sim in simulations:
 
-    # print(f"Processing Kinematic Data for: {sim.label} ---------------------------------------------------------------")
-    # sim.process_kinematics()
-    # pre_process_sim_for_cora(sim)
-    # print(f"Processing data for CORA")
-    #
-    # print(f"Processing NIJ Data")
-    # sim.process_NIJ()
-    #
-    # print(f"Calculating Peak Global Response")
-    #
-    # peak_global_response = determine_peak_global_response(sim)
-    # peak_global_response_dict[sim.label] = peak_global_response
-    # plot_peak_global_response_table(peak_global_response_dict)
-    #
-    # nij_values_dict[sim.label] = determine_NIJ(sim)
-    # plot_NIJ_table(nij_values_dict)
-    # print(f"Completed\n")
+    print(f"Processing Kinematic Data for: {sim.label} ---------------------------------------------------------------")
+    sim.process_kinematics()
+    pre_process_sim_for_cora(sim)
+    print(f"Processing data for CORA")
+
+    print(f"Processing HIC Data")
+    sim.process_HIC()
+    plot_individual_HIC(sim, hic_injury_criteria)
+
+    print(f"Processing NIJ Data")
+    sim.process_NIJ()
+
+    print(f"Calculating Peak Global Response")
+
+    peak_global_response = determine_peak_global_response(sim)
+    peak_global_response_dict[sim.label] = peak_global_response
+    plot_peak_global_response_table(peak_global_response_dict)
+
+    nij_values_dict[sim.label] = determine_NIJ(sim, nij_injury_criteria)
+    plot_NIJ_table(nij_values_dict)
+    print(f"Completed\n")
 
     # ###################################################################
     #
@@ -135,19 +153,19 @@ for sim in simulations:
 
     ###################################################################
     #
-    print(f"Processing Ligament Data for: {sim.label}\n")
-    sim.process_ligaments()
-    sim.grouped_ligaments = sim.group_ligaments_by_level()
-    # plot_ligament_data_summary(sim)
-
-    peak_force, peak_stretch = peak_ligament_values(sim)
-    peak_lig_force_values_dict[sim.label] = peak_force
-    peak_lig_stretch_values_dict[sim.label] = peak_stretch
-
-    plot_individual_ligament_table(peak_lig_force_values_dict, "Ligament Force")
-    plot_individual_ligament_table(peak_lig_stretch_values_dict, "Ligament Stretch")
-
-    print("\n(completed)\n")
+    # print(f"Processing Ligament Data for: {sim.label}\n")
+    # sim.process_ligaments()
+    # sim.grouped_ligaments = sim.group_ligaments_by_level()
+    # # plot_ligament_data_summary(sim)
+    #
+    # peak_force, peak_stretch = peak_ligament_values(sim)
+    # peak_lig_force_values_dict[sim.label] = peak_force
+    # peak_lig_stretch_values_dict[sim.label] = peak_stretch
+    #
+    # plot_individual_ligament_table(peak_lig_force_values_dict, "Ligament Force")
+    # plot_individual_ligament_table(peak_lig_stretch_values_dict, "Ligament Stretch")
+    #
+    # print("\n(completed)\n")
 
     ###################################################################
 
@@ -160,23 +178,26 @@ for sim in simulations:
     # peak_muscle_force_values_dict[sim.label] = peak_force
     # peak_muscle_stretch_values_dict[sim.label] = peak_stretch
     # plot_individual_muscle_table(peak_force, "Muscle Force", sim.label)
-    # plot_individual_muscle_table(peak_stretch, "Muscle Stretch", sim.label)
+    # plot_individual_muscle_table(peak_stretch, "Muscle Strain", sim.label)
 
 os.chdir(compare_dir_path)
 
 #########################################################################################
 #
-# print(f"Comparing Kinematic Data")
-# compare_kinematic_data(simulations, exp_kinematic_data)
-# print("\n(completed)\n")
-#
-# print(f"Comparing Peak Global Response")
-#
-# nij_comparison = compare_NIJ(simulations)
-# plot_NIJ_comparison_table(nij_comparison)
-#
-# global_comparison = compare_peak_global_response(simulations)
-# plot_peak_global_comparison_table(global_comparison)
+print(f"Comparing Kinematic Data")
+compare_kinematic_data(simulations, exp_kinematic_data)
+print("\n(completed)\n")
+
+print(f"Comparing Peak Global Response")
+
+global_comparison = compare_peak_global_response(simulations)
+plot_peak_global_comparison_table(global_comparison)
+
+comparison_data = compare_HIC(simulations, hic_injury_criteria)
+plot_HIC_comparison(comparison_data)
+
+nij_comparison = compare_NIJ(simulations, nij_injury_criteria)
+plot_NIJ_comparison_table(nij_comparison)
 #
 # ########################################################################################
 #
@@ -207,24 +228,23 @@ os.chdir(compare_dir_path)
 #     compare_ligament_data(simulations, level)
 # print("\n(completed)\n")
 
-print(f"Comparing Peak Ligament Data")
-lig_force_comparison, lig_stretch_comparison = compare_peak_ligament_values(simulations)
-plot_comparison_ligament_table(lig_force_comparison, "Ligament Force Comparison")
-plot_comparison_ligament_table(lig_stretch_comparison, "Ligament Stretch Comparison")
-#########################################################################################
+# print(f"Comparing Peak Ligament Data")
+# lig_force_comparison, lig_stretch_comparison = compare_peak_ligament_values(simulations)
+# plot_comparison_ligament_table(lig_force_comparison, "Ligament Force Comparison")
+# plot_comparison_ligament_table(lig_stretch_comparison, "Ligament Stretch Comparison")
+# #########################################################################################
 
 # print(f"Comparing Muscle Data")
 # # Call the function in your main script
 # compare_muscle_data(simulations)
 # print("\n(completed)\n")
-
+#
 # muscle_force_comparison, muscle_stretch_comparison = compare_peak_muscle_values(simulations)
 # plot_comparison_muscle_table(muscle_force_comparison, "Muscle Force Comparison")
-# plot_comparison_muscle_table(muscle_stretch_comparison, "Muscle Stretch Comparison")
+# plot_comparison_muscle_table(muscle_stretch_comparison, "Muscle Strain Comparison")
 #########################################################################################
 
 # print(f"Comparing NIJ Data")
-# # Call the function in your main script
 # compare_nij_data(simulations)
 # print("\n(completed)\n")
 

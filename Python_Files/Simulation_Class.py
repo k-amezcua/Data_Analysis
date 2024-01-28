@@ -8,6 +8,9 @@ from C_Process_Disc_Data.Process_Disc_Data import Disc
 from D_Process_Ligament_Data.Process_Ligament_Data import Ligament
 from E_Process_Muscle_Data.Process_Muscle_Data import Muscle
 from F_Process_Injury_Data.NIJ.Calculate_NIJ import calculate_NIJ
+from F_Process_Injury_Data.HIC.Calculate_HIC import calculate_HIC_non_constant_time
+
+
 ########################################################################################################################
 class Simulation:
     def __init__(self, compare_dir_path, dir_path, disc_dict_list, ligament_dict_list, muscle_dict_list, datalabel,
@@ -22,6 +25,7 @@ class Simulation:
         self.lig_dir_path = os.path.join(dir_path, "Ligament Data")
         self.musc_dir_path = os.path.join(dir_path, "Muscle Data")
         self.nij_dir_path = os.path.join(dir_path, "Injury Data\\NIJ")
+        self.hic_dir_path = os.path.join(dir_path, "Injury Data\\HIC")
 
         self.label = datalabel
 
@@ -91,9 +95,10 @@ class Simulation:
         for musc_dict in muscle_dict_list:
             musc_name = musc_dict['muscle_name']
             musc_group = musc_dict['muscle_group']
+            musc_failure_strain = musc_dict['failure_strain']
             musc_file_path = os.path.join(musc_dir_path, musc_name + '_results.txt')
             num_elements = musc_dict['muscle_elements']
-            muscles.append(Muscle(musc_name, musc_group, num_elements, musc_file_path))
+            muscles.append(Muscle(musc_name, musc_group, musc_failure_strain, num_elements, musc_file_path))
         return muscles
 
     def process_discs(self):
@@ -142,6 +147,11 @@ class Simulation:
         os.chdir(self.nij_dir_path)
         nij_file_path = os.path.join(self.nij_dir_path, 'force_results.txt')
         self.nij, self.nij_injury_criterion = calculate_NIJ(self, nij_file_path)
+
+    def process_HIC(self):
+        os.chdir(self.hic_dir_path)
+        t_range = 15/1000
+        self.hic = calculate_HIC_non_constant_time(self, t_range)
 
     # def load_processed_kinematics(self):
     #     load_path = os.path.join(self.kin_dir_path, 'results.csv')
