@@ -3,25 +3,25 @@ import matplotlib.pyplot as plt
 
 def determine_HIC(sim, hic_injury_criteria):
     # Assuming sim.HIC is already calculated and stored in each simulation object
-    hic = sim.HIC
+    hic = round(sim.hic)
     percent_of_criteria = (hic / hic_injury_criteria) * 100
     return hic, percent_of_criteria
 
 def compare_HIC(simulations, hic_injury_criteria):
     comparison_data = []
     for sim in simulations:
-        hic, percent_of_criteria = determine_HIC(sim)
+        hic, percent_of_criteria = determine_HIC(sim, hic_injury_criteria)
         comparison_data.append([sim.label, hic, percent_of_criteria, hic_injury_criteria])
     return comparison_data
 
 def plot_individual_HIC(sim, hic_injury_criteria):
-    hic, percent_of_criteria = determine_HIC(sim)
+    hic, percent_of_criteria = determine_HIC(sim, hic_injury_criteria)
     data = [[sim.label, hic, percent_of_criteria, hic_injury_criteria]]
-    df = pd.DataFrame(data, columns=['Simulation', 'HIC', 'Percent of Injury Criteria', 'Injury Criteria (HIC=1000)'])
+    df = pd.DataFrame(data, columns=['Simulation', 'HIC', 'Percent of Injury Criteria', f'Injury Criteria (HIC={hic_injury_criteria})'])
     plot_table(df, f'HIC for {sim.label}')
 
-def plot_HIC_comparison(comparison_data):
-    df = pd.DataFrame(comparison_data, columns=['Simulation', 'HIC', 'Percent of Injury Criteria', 'Injury Criteria (HIC=1000)'])
+def plot_HIC_comparison(comparison_data, hic_injury_criteria):
+    df = pd.DataFrame(comparison_data, columns=['Simulation', 'HIC', 'Percent of Injury Criteria', f'Injury Criteria (HIC={hic_injury_criteria})'])
     plot_table(df, 'HIC Comparison')
 
 def plot_table(df, title):

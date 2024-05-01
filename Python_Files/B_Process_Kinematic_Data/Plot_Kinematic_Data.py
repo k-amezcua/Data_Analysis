@@ -271,7 +271,7 @@ def plot_kinematic_data(data, average_data, low_data, high_data, panzer_data, th
     # ax.plot(average_data[channelt],high_data[Head_ao_rad_s_s_23],color = "lightpink")
 
     ax.set_xlim(0, 0.25)
-    ax.set_ylim(-5000, 2500)
+    ax.set_ylim(-10000, 10000)
     ax.set_xlabel('Time (s)')
     ax.set_ylabel('Ry (rad-s-s)')
     ax.grid(True)

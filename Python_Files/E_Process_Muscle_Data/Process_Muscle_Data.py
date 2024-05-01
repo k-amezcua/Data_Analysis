@@ -35,10 +35,12 @@ class Muscle:
 
                 for j in range(self.num_elements):
                     element_line = lines[start + j]
-                    element_data = re.findall(r'-?\d+(\.\d+)?(e[-+]?\d+)?', element_line, re.IGNORECASE)
-                    element_data = [float(''.join(e)) if e[0] else 0 for e in
-                                    element_data]  # Convert tuples to floats or 0
+                    # element_data = re.findall(r'-?\d+(\.\d+)?(e[-+]?\d+)?', element_line, re.IGNORECASE)
 
+                    element_data = element_line.split(',')
+                    element_data = [float(data) for data in
+                                    element_data[1:]]  # Skip the first element if it's not a number
+                    # print(element_data)
                     # Ensure each metric list is populated
                     for metric, idx in zip(['Fr', 'Fy', 'Fz', 'stretch'], [1, 3, 4, 5]):
                         if idx < len(element_data):

@@ -35,4 +35,4 @@ def plot_table(df, title, sim_label, include_index):
     else:
         plt.savefig(f'{title.replace(" ", "_")}.png')
         df.to_excel(f'{title.replace(" ", "_")}.xlsx', index=include_index)
-    plt.show()
+    plt.close()

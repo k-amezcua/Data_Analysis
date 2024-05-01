@@ -51,4 +51,4 @@ def plot_vertebra_comparison_table(comparison_df):
 
     plt.savefig(f'Vertebral_Comparison.png')
     transposed_df.to_excel('Vertebra_Comparison_Table.xlsx')
-    plt.show()
+    plt.close()

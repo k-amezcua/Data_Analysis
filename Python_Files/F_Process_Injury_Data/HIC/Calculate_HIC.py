@@ -3,16 +3,35 @@ from scipy.integrate import simps
 import pandas as pd
 def calculate_HIC_non_constant_time(sim, t_range):
     # Extract acceleration data in g's and time data in seconds from the simulation object
-    acceleration_data = sim.kinematics['Head_aDx'].values  # Assuming acceleration is in g's
-    time_data = sim.kinematics['Sim_Time_s'].values  # Assuming time is in seconds
+    acceleration_data = (sim.kinematics['Head_aRes'].values) * 9.81  # Convert acceleration to m/s^2
+    time_data = sim.kinematics['Sim_Time_s'].values  # Time data in seconds
 
-    # Pass t_range to the compute_HIC function
-    hic = compute_HIC(acceleration_data, time_data, t_range)
+    # Convert the acceleration and time data into a DataFrame for easier manipulation
+    df = pd.DataFrame({'Time': time_data, 'Acceleration': acceleration_data})
 
+    # Filter out rows where time is less than 0.001 seconds, but keep the first row
+    filtered_df = df[(df['Time'] >= 0.001) | (df.index == 0)]
+
+    # Update acceleration_data and time_data with filtered values
+    acceleration_data_filtered = filtered_df['Acceleration'].values
+    time_data_filtered = filtered_df['Time'].values
+
+    # Pass the filtered data to the compute_HIC function
+    hic = compute_HIC(acceleration_data_filtered, time_data_filtered, t_range)
+
+    # Create a DataFrame for HIC value
     df_hic = pd.DataFrame({'HIC': [hic]})
+
+    # Save the HIC value to a CSV file
     df_hic.to_csv(f'{sim.label}_HIC_Value.csv', index=False)
 
+    # Save the filtered data used for HIC calculation to a CSV file
+    filtered_df.to_csv(f'{sim.label}_HIC_Calc.csv', index=False, columns=['Time', 'Acceleration'])
+
+    print('(saved HIC to file)')
+
     return hic
+
 
 def compute_HIC(acceleration, time, t_range):
     max_hic = 0

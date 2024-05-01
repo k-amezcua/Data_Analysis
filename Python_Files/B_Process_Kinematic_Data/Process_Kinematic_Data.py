@@ -99,7 +99,7 @@ def process_kinematic_data(simulation, kin_file_path, average_data, low_data, hi
                       pd.Series(T1_vx_tracker, name='T1_vx'),
                       pd.Series(T1_wy_tracker, name='T1_wy'), pd.Series(T1_aRy_tracker, name='T1_aRy')], axis=1)
 
-    data['Sim_Time_s'] = data['Sim_Time_s'] /10
+    # data['Sim_Time_s'] = data['Sim_Time_s'] /10
     data['Head_Dx'] = data['Head_Dx'] * 1000
     data['Head_Dz'] = data['Head_Dz'] * 1000
     data['Head_aDx'] = data['Head_aDx'] / 9.80665
@@ -128,8 +128,9 @@ def process_kinematic_data(simulation, kin_file_path, average_data, low_data, hi
     data['Sim_Rel_Head_Dx'] = (data['Head_Dx'] - data['T1_Dx']) * -1
     data['Sim_Rel_Head_Dz'] = data['Head_Dz']
     data['Sim_Rel_Head_Ry'] = (data['Head_Ry'] - data['T1_Ry'])
+    data['Head_aRes'] = (data['Head_aDx']**2+data['Head_aDz']**2)**0.5
 
-    csv_path = os.path.splitext(kin_file_path)[0] + ".csv"
+    csv_path = os.path.splitext(kin_file_path)[0] + "data.csv"
     data.to_csv(csv_path)
 
     plot_kinematic_data(data, average_data, low_data, high_data, panzer_data, thunn_data)

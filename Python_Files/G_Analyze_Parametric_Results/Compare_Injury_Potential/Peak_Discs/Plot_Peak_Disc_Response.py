@@ -46,4 +46,4 @@ def plot_disc_comparison_table(comparison_dict, title):
     plt.title(f'Disc {title} Comparison')
     plt.savefig(f'Disc {title} Comparison.png')
     df.to_excel(f'Disc {title} Comparison.xlsx')
-    plt.show()
+    plt.close()
